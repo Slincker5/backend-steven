@@ -1,0 +1,30 @@
+# Ignorar la carpeta de dependencias de Composer
+/vendor/
+/vendor/*
+
+# Ignorar archivos de entorno
+.env
+
+# Ignorar archivos de caché de PHPUnit
+.phpunit.result.cache
+
+# Ignorar directorios y archivos de caché y logs
+/cache/
+/logs/
+/tmp/
+
+# Ignorar configuraciones y archivos de IDE
+/.idea/
+/.vscode/
+*.iml
+
+# Ignorar el archivo de configuración de base de datos
+/src/Models/Database.php
+
+# Ignorar archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar otros archivos temporales
+*.log
+*.tmp

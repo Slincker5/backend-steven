@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Models;
+
 use App\Models\Database;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class File extends Database
 {
-    
+
     private $response;
 
     protected function eliminarProductos()
@@ -52,28 +53,63 @@ class File extends Database
         $this->response['status'] = 'OK';
         $this->response['message'] = 'Se cargo el archivo a la base de datos';
         return $this->response;
-
     }
 
-    public function listadoEscaneado(){
+    public function listadoEscaneado()
+    {
         $sql = 'SELECT * FROM productos WHERE escaneado = 1';
         $lista = $this->ejecutarConsulta($sql);
         return $lista->fetchAll(\PDO::FETCH_ASSOC);
     }
-
-    public function agregarEscaneado ($articulo) {
-        $fecha = date("Y-m-d H:i:s");
-        $sql = 'UPDATE productos SET escaneado = 1, fecha = ? WHERE articulo = ?';
-        $this->ejecutarConsulta($sql, [$fecha, $articulo]);
-        $this->response['status'] = 'OK';
-        $this->response['message'] = 'Producto escaneado con exito';
-        return $this->response;
-    }
-
-    public function productosRestantes() {
+    public function productosRestantes()
+    {
         $sql = 'SELECT * FROM productos WHERE escaneado = 0';
         $lista = $this->ejecutarConsulta($sql);
         return $lista->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    private function validarArticulo($articulo)
+    {
+        $sql = 'SELECT * FROM productos WHERE articulo = ?';
+        $stmt = $this->ejecutarConsulta($sql, [$articulo]);
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function validarArticuloEscaneado($articulo)
+    {
+        $sql = 'SELECT * FROM productos WHERE articulo = ? AND escaneado = 1';
+        $stmt = $this->ejecutarConsulta($sql, [$articulo]);
+
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function agregarEscaneado($articulo)
+    {
+        $fecha = date("Y-m-d H:i:s");
+        if (!$this->validarArticulo($articulo)) {
+            $this->response['status'] = 'error';
+            $this->response['message'] = 'El articulo escaneado no se encuentra en la base de datos.';
+            return $this->response;
+        } else if ($this->validarArticuloEscaneado($articulo)) {
+            $this->response['status'] = 'error';
+            $this->response['message'] = 'El articulo ya ha sido escaneado.';
+            return $this->response;
+        } else {
+            $sql = 'UPDATE productos SET escaneado = 1, fecha = ? WHERE articulo = ?';
+            $this->ejecutarConsulta($sql, [$fecha, $articulo]);
+            $this->response['status'] = 'OK';
+            $this->response['message'] = 'Producto escaneado con exito';
+            return $this->response;
+        }
+    }
 }
