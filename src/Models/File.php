@@ -57,7 +57,7 @@ class File extends Database
 
     public function listadoEscaneado()
     {
-        $sql = 'SELECT * FROM productos WHERE escaneado = 1';
+        $sql = 'SELECT * FROM productos WHERE escaneado = 1 ORDER BY fecha DESC';
         $lista = $this->ejecutarConsulta($sql);
         return $lista->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -66,6 +66,14 @@ class File extends Database
         $sql = 'SELECT * FROM productos WHERE escaneado = 0';
         $lista = $this->ejecutarConsulta($sql);
         return $lista->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    private function busquedaArticulo($articulo)
+    {
+        $sql = 'SELECT * FROM productos WHERE articulo = ?';
+        $stmt = $this->ejecutarConsulta($sql, [$articulo]);
+        $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $list;
     }
 
     private function validarArticulo($articulo)
@@ -109,6 +117,7 @@ class File extends Database
             $this->ejecutarConsulta($sql, [$fecha, $articulo]);
             $this->response['status'] = 'OK';
             $this->response['message'] = 'Producto escaneado con exito';
+            $this->response['articulos'] = $this->busquedaArticulo($articulo);
             return $this->response;
         }
     }
