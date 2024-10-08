@@ -10,6 +10,7 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -22,6 +23,11 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Slim\\Psr7\\' => 10,
             'Slim\\' => 5,
+        ),
+        'R' => 
+        array (
+            'Ramsey\\Uuid\\' => 12,
+            'Ramsey\\Collection\\' => 18,
         ),
         'P' => 
         array (
@@ -39,12 +45,17 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         ),
         'F' => 
         array (
+            'Firebase\\JWT\\' => 13,
             'Fig\\Http\\Message\\' => 17,
             'FastRoute\\' => 10,
         ),
         'C' => 
         array (
             'Complex\\' => 8,
+        ),
+        'B' => 
+        array (
+            'Brick\\Math\\' => 11,
         ),
         'A' => 
         array (
@@ -68,6 +79,14 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
+        ),
+        'Ramsey\\Uuid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ramsey/uuid/src',
+        ),
+        'Ramsey\\Collection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ramsey/collection/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (
@@ -103,6 +122,10 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
         'Fig\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/fig/http-message-util/src',
@@ -114,6 +137,10 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         'Complex\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
+        ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
         ),
         'App\\' => 
         array (

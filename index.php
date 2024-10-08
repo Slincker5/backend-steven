@@ -1,6 +1,7 @@
 <?php
 use Slim\Factory\AppFactory;
 use App\Controllers\FileController;
+use App\Controllers\AuthController;
 require __DIR__ . '/vendor/autoload.php';
 
 $app = AppFactory::create();
@@ -23,6 +24,10 @@ $app->group('/document', function ($group) {
     $group->get('/list', FileController::class . ':listadoEscaneado');
     $group->get('/productos-restantes', FileController::class . ':productosRestantes');
     $group->put('/escanear', FileController::class . ':agregarEscaneado');
+});
+
+$app->group('/user', function ($group) {
+    $group->post('/register', AuthController::class . ':createAccount');
 });
 
 $app->run();
