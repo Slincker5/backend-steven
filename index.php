@@ -28,6 +28,7 @@ $app->group('/document', function ($group) {
 
 $app->group('/user', function ($group) {
     $group->post('/register', AuthController::class . ':createAccount');
+    $group->post('/login', AuthController::class . ':login');
 });
 
 $app->run();

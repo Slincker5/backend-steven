@@ -20,4 +20,14 @@ class AuthController
         $response->getBody()->write(json_encode($register));
         return $response;
     }
+
+    function login($request, $response, $args)
+    {
+        $body = $request->getParsedBody();
+        $classAuth = new Auth();
+        $login = $classAuth->login($body['username'], $body['pass']);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($login));
+        return $response;
+    }
 }

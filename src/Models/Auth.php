@@ -85,4 +85,46 @@ class Auth extends Database
         }
     }
 
+    public function login($username, $pass)
+    {
+        $sql = 'SELECT * FROM usuarios WHERE username = ?';
+        $logIn = $this->ejecutarConsulta($sql, [$username]);
+        $accountData = $logIn->fetchAll(\PDO::FETCH_ASSOC);
+        if (count($accountData) === 1) {
+            if (password_verify($pass, $accountData[0]['pass'])) {
+
+                // Crear un token
+                $payload = array(
+                    "iss" => "maxiefectivo",
+                    "aud" => $accountData[0]['user_uuid'],
+                    "iat" => time(),
+                    "nbf" => time(),
+                    "data" => array(
+                        "user_uuid" => $accountData[0]['user_uuid'],
+                        "username" => $accountData[0]['username'],
+                        "rol" => $accountData[0]['rol'],
+                    ),
+                );
+                $alg = "HS256";
+                $token = JWT::encode($payload, $this->key, $alg);
+
+                $this->response['status'] = 'OK';
+                $this->response['message'] = 'Sesión exitosa.';
+                $this->response['username'] = $accountData[0]['username'];
+                $this->response['user_uuid'] = $accountData[0]['user_uuid'];
+                $this->response['rol'] = $accountData[0]['rol'];
+                $this->response['token'] = $token;
+                return $this->response;
+            } else {
+                $this->response['status'] = 'error';
+                $this->response['message'] = 'Usuario o contraseña incorrectos, valida tus datos';
+                return $this->response;
+            }
+        } else {
+            $this->response['status'] = 'error';
+            $this->response['message'] = 'Usuario o contraseña incorrectos, valida tus datos';
+            return $this->response;
+        }
+    }
+
 }
