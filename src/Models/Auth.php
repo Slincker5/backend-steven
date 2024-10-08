@@ -10,7 +10,7 @@ class Auth extends Database
 {
 
     #PROPIEDADES CLASE
-    private $nombres = '/^[a-zA-ZñÑ]+$/';
+    private $nombres = '/^[0-9]+$/';
     private $response;
     private $key = "PlankThuthu";
 
