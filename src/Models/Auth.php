@@ -18,13 +18,14 @@ class Auth extends Database
     {
         $sql = 'SELECT username FROM usuarios WHERE username = ?';
         $singin = $this->ejecutarConsulta($sql, [$username]);
-        return $singin;
+        $list = $singin->fetchAll(\PDO::FETCH_ASSOC);
+        return count($list)
     }
 
 
     public function createAccount($username, $pass, $repass)
     {
-        if(self::verifyAccount($username)){
+        if(self::verifyAccount($username) > 0){
             $this->response['status'] = 'error';
             $this->response['message'] = 'Este usuario no esta disponible, elige otro.';
             return $this->response;
