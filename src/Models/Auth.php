@@ -14,10 +14,21 @@ class Auth extends Database
     private $response;
     private $key = "PlankThuthu";
 
+    private function verifyAccount($username)
+    {
+        $sql = 'SELECT username FROM usuarios WHERE username = ?';
+        $singin = $this->ejecutarConsulta($sql, [$username]);
+        return $singin;
+    }
+
 
     public function createAccount($username, $pass, $repass)
     {
-        if (empty($username) || empty($pass)) {
+        if(self::verifyAccount($username)){
+            $this->response['status'] = 'error';
+            $this->response['message'] = 'Este usuario no esta disponible, elige otro.';
+            return $this->response;
+        } else if (empty($username) || empty($pass)) {
             $this->response['status'] = 'error';
             $this->response['message'] = 'Completa todos los campos.';
             return $this->response;
@@ -37,11 +48,11 @@ class Auth extends Database
             $this->response['status'] = 'error';
             $this->response['message'] = 'Tu contraseña debe tener al menos 8 caracteres.';
             return $this->response;
-        } else if($pass !== $repass){
+        } else if ($pass !== $repass) {
             $this->response['status'] = 'error';
             $this->response['message'] = 'Tu contraseña no coincide.';
             return $this->response;
-        }else {
+        } else {
 
             #GENERANDO UN UUID UNICO PARA EL PERFIL
             $uuidFactory = new UuidFactory();
@@ -126,5 +137,4 @@ class Auth extends Database
             return $this->response;
         }
     }
-
 }
