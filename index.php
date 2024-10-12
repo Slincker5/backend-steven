@@ -4,6 +4,7 @@ use Slim\Factory\AppFactory;
 use App\Controllers\FileController;
 use App\Controllers\AuthController;
 use App\Controllers\AdminController;
+use App\Controllers\UserController;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Slim\Psr7\Response;
@@ -69,7 +70,7 @@ $app->group('/document', function ($group) {
 });
 
 $app->group('/user', function ($group) {
-    $group->get('/list', AuthController::class . ':getUsers');
+    $group->get('/list', UserController::class . ':getUsers');
     $group->post('/register', AuthController::class . ':createAccount');
     $group->post('/login', AuthController::class . ':login');
 });
