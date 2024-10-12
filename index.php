@@ -75,6 +75,6 @@ $app->group('/user', function ($group) {
 
 $app->group('/admin', function ($group) {
     $group->post('/aprobar-usuario', AdminController::class . ':verifyUser');
-});
+})->add($validateJwtMiddleware);
 
 $app->run();
