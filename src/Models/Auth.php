@@ -19,7 +19,7 @@ class Auth extends Database
         $sql = 'SELECT username FROM usuarios WHERE username = ?';
         $singin = $this->ejecutarConsulta($sql, [$username]);
         $list = $singin->fetchAll(\PDO::FETCH_ASSOC);
-        return count($list)
+        return count($list);
     }
 
 
