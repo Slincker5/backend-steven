@@ -3,6 +3,7 @@
 use Slim\Factory\AppFactory;
 use App\Controllers\FileController;
 use App\Controllers\AuthController;
+use App\Controllers\AdminController;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Slim\Psr7\Response;
@@ -73,7 +74,7 @@ $app->group('/user', function ($group) {
 });
 
 $app->group('/admin', function ($group) {
-    $group->post('/aprobar-usuario', AuthController::class . ':verifyUser');
+    $group->post('/aprobar-usuario', AdminController::class . ':verifyUser');
 });
 
 $app->run();
