@@ -69,12 +69,13 @@ $app->group('/document', function ($group) {
 });
 
 $app->group('/user', function ($group) {
+    $group->get('/list', AuthController::class . ':getUsers');
     $group->post('/register', AuthController::class . ':createAccount');
     $group->post('/login', AuthController::class . ':login');
 });
 
 $app->group('/admin', function ($group) {
-    $group->post('/aprobar-usuario', AdminController::class . ':verifyUser');
+    $group->post('/approve-user', AdminController::class . ':verifyUser');
 })->add($validateJwtMiddleware);
 
 $app->run();
