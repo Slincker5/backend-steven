@@ -29,6 +29,7 @@ class Admin extends Database
             if ($verificar) {
                 $this->response['status'] = 'OK';
                 $this->response['message'] = 'Usuario autorizado exitosamente.';
+                $this->response["rol"] = $this->getRoles()[0]["rol"];
                 return $this->response;
             }
         }
