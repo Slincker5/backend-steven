@@ -10,10 +10,10 @@ class File extends Database
 
     private $response;
 
-    protected function eliminarProductos()
+    protected function eliminarProductos($user_uuid)
     {
-        $sql = 'DELETE FROM productos';
-        $response = $this->ejecutarConsulta($sql);
+        $sql = 'DELETE FROM productos WHERE user_uuid = ?';
+        $response = $this->ejecutarConsulta($sql, [$user_uuid]);
         return $response->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -44,7 +44,7 @@ class File extends Database
 
             $articulos[] = $rowData;
         }
-        $this->eliminarProductos();
+        $this->eliminarProductos($user_uuid);
 
         foreach ($articulos as $articulo) {
             $sql = 'INSERT INTO productos (articulo, descripcion, precio, costo, antiguedad, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
