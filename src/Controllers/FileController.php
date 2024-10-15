@@ -11,6 +11,7 @@ class FileController
 
     public function uploadXlsx(Request $request, Response $response, $args)
     {
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         // Obtener los archivos subidos
         $uploadedFiles = $request->getUploadedFiles();
 
@@ -23,7 +24,7 @@ class FileController
                 // Leer el contenido del archivo utilizando el modelo
                 $filePath = $xlsxFile->getStream()->getMetadata('uri');
                 $articulos = new File();
-                $req = $articulos->readXlsx($filePath);
+                $req = $articulos->readXlsx($filePath, $user_uuid);
 
                 // Devolver el array de artículos en formato JSON
                 $response->getBody()->write(json_encode($req));

@@ -17,7 +17,7 @@ class File extends Database
         return $response->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function readXlsx($filePath)
+    public function readXlsx($filePath, $user_uuid)
     {
         // Crear un lector y cargar el archivo desde el stream
         $reader = IOFactory::createReader('Xlsx');
@@ -47,8 +47,8 @@ class File extends Database
         $this->eliminarProductos();
 
         foreach ($articulos as $articulo) {
-            $sql = 'INSERT INTO productos (articulo, descripcion, precio, costo, antiguedad) VALUES (?, ?, ?, ?, ?)';
-            $this->ejecutarConsulta($sql, [$articulo['articulo'], $articulo['descripcion'], $articulo['precio'], $articulo['costo'], $articulo['antiguedad']]);
+            $sql = 'INSERT INTO productos (articulo, descripcion, precio, costo, antiguedad, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
+            $this->ejecutarConsulta($sql, [$articulo['articulo'], $articulo['descripcion'], $articulo['precio'], $articulo['costo'], $articulo['antiguedad'], $user_uuid]);
         }
         $this->response['status'] = 'OK';
         $this->response['message'] = 'Se cargo el archivo a la base de datos';
