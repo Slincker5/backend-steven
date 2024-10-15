@@ -55,31 +55,31 @@ class File extends Database
         return $this->response;
     }
 
-    public function listadoEscaneado()
+    public function listadoEscaneado($user_uuid)
     {
-        $sql = 'SELECT * FROM productos WHERE escaneado = 1 ORDER BY fecha DESC';
-        $lista = $this->ejecutarConsulta($sql);
+        $sql = 'SELECT * FROM productos WHERE escaneado = 1 AND user_uuid = ? ORDER BY fecha DESC';
+        $lista = $this->ejecutarConsulta($sql, [$user_uuid]);
         return $lista->fetchAll(\PDO::FETCH_ASSOC);
     }
-    public function productosRestantes()
+    public function productosRestantes($user_uuid)
     {
-        $sql = 'SELECT * FROM productos WHERE escaneado = 0';
-        $lista = $this->ejecutarConsulta($sql);
+        $sql = 'SELECT * FROM productos WHERE escaneado = 0 AND user_uuid = ?';
+        $lista = $this->ejecutarConsulta($sql, [$user_uuid]);
         return $lista->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    private function busquedaArticulo($articulo)
+    private function busquedaArticulo($articulo, $user_uuid)
     {
-        $sql = 'SELECT * FROM productos WHERE articulo = ?';
-        $stmt = $this->ejecutarConsulta($sql, [$articulo]);
+        $sql = 'SELECT * FROM productos WHERE articulo = ? AND user_uuid = ?';
+        $stmt = $this->ejecutarConsulta($sql, [$articulo, $user_uuid]);
         $list = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $list;
     }
 
-    private function validarArticulo($articulo)
+    private function validarArticulo($articulo, $user_uuid)
     {
-        $sql = 'SELECT * FROM productos WHERE articulo = ?';
-        $stmt = $this->ejecutarConsulta($sql, [$articulo]);
+        $sql = 'SELECT * FROM productos WHERE articulo = ? AND  user_uuid = ?';
+        $stmt = $this->ejecutarConsulta($sql, [$articulo, $user_uuid]);
 
         if ($stmt->rowCount() > 0) {
             return true;
@@ -88,10 +88,10 @@ class File extends Database
         }
     }
 
-    private function validarArticuloEscaneado($articulo)
+    private function validarArticuloEscaneado($articulo, $user_uuid)
     {
-        $sql = 'SELECT * FROM productos WHERE articulo = ? AND escaneado = 1';
-        $stmt = $this->ejecutarConsulta($sql, [$articulo]);
+        $sql = 'SELECT * FROM productos WHERE articulo = ? AND escaneado = 1 AND user_uuid = ?';
+        $stmt = $this->ejecutarConsulta($sql, [$articulo, $user_uuid]);
 
         if ($stmt->rowCount() > 0) {
             return true;
@@ -101,23 +101,23 @@ class File extends Database
     }
 
 
-    public function agregarEscaneado($articulo)
+    public function agregarEscaneado($articulo, $user_uuid)
     {
         $fecha = date("Y-m-d H:i:s");
-        if (!$this->validarArticulo($articulo)) {
+        if (!$this->validarArticulo($articulo, $user_uuid)) {
             $this->response['status'] = 'error';
             $this->response['message'] = 'El articulo escaneado no se encuentra en la base de datos.';
             return $this->response;
-        } else if ($this->validarArticuloEscaneado($articulo)) {
+        } else if ($this->validarArticuloEscaneado($articulo, $user_uuid)) {
             $this->response['status'] = 'error';
             $this->response['message'] = 'El articulo ya ha sido escaneado.';
             return $this->response;
         } else {
-            $sql = 'UPDATE productos SET escaneado = 1, fecha = ? WHERE articulo = ?';
-            $this->ejecutarConsulta($sql, [$fecha, $articulo]);
+            $sql = 'UPDATE productos SET escaneado = 1, fecha = ? WHERE articulo = ? AND user_uuid = ?';
+            $this->ejecutarConsulta($sql, [$fecha, $articulo, $user_uuid]);
             $this->response['status'] = 'OK';
             $this->response['message'] = 'Producto escaneado con exito';
-            $this->response['articulos'] = $this->busquedaArticulo($articulo);
+            $this->response['articulos'] = $this->busquedaArticulo($articulo, $user_uuid);
             return $this->response;
         }
     }

@@ -39,16 +39,18 @@ class FileController
 
     public function listadoEscaneado(Request $request, Response $response, $args)
     {
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $classFile = new File();
-        $lista = $classFile->listadoEscaneado();
+        $lista = $classFile->listadoEscaneado($user_uuid);
         $response->getBody()->write(json_encode($lista));
         return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function productosRestantes(Request $request, Response $response, $args)
     {
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $classFile = new File();
-        $lista = $classFile->productosRestantes();
+        $lista = $classFile->productosRestantes($user_uuid);
         $response->getBody()->write(json_encode($lista));
         return $response->withHeader('Content-Type', 'application/json');
     }
@@ -56,8 +58,9 @@ class FileController
     public function agregarEscaneado(Request $request, Response $response, $args)
     {
         $body = $request->getParsedBody();
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $classFile = new File();
-        $escanear = $classFile->agregarEscaneado($body['articulo']);
+        $escanear = $classFile->agregarEscaneado($body['articulo'], $user_uuid);
         $response->getBody()->write(json_encode($escanear));
         return $response->withHeader('Content-Type', 'application/json');
     }
