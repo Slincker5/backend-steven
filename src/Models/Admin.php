@@ -32,6 +32,11 @@ class Admin extends Database
                 $this->response["rol"] = $this->getRoles()[0]["rol"];
                 return $this->response;
             }
+        } else {
+            $this->response['status'] = 'error';
+            $this->response['message'] = 'No estas autorizado para esta accion.';
+            $this->response["rol"] = $this->getRoles()[0]["rol"];
+            return $this->response;
         }
     }
 }
