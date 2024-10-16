@@ -69,11 +69,14 @@ $app->group('/document', function ($group) {
     $group->put('/escanear', FileController::class . ':agregarEscaneado');
 })->add($validateJwtMiddleware);
 
-$app->group('/user', function ($group) {
-    $group->get('/list', UserController::class . ':getUsers');
+$app->group('/auth', function ($group) {
     $group->post('/register', AuthController::class . ':createAccount');
     $group->post('/login', AuthController::class . ':login');
 });
+
+$app->group('/user', function ($group) {
+    $group->get('/list', UserController::class . ':getUsers');
+})->add($validateJwtMiddleware);
 
 $app->group('/admin', function ($group) {
     $group->post('/approve-user', AdminController::class . ':verifyUser');
