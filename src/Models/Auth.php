@@ -86,6 +86,7 @@ class Auth extends Database
                 $this->response['message'] = 'Registro exitoso.';
                 $this->response['username'] = $username;
                 $this->response['user_uuid'] = $profile_uuid;
+                $this->response['verificado'] = 0;
                 $this->response['rol'] = "User";
                 $this->response['token'] = $token;
                 return $this->response;
