@@ -76,6 +76,7 @@ $app->group('/auth', function ($group) {
 
 $app->group('/user', function ($group) {
     $group->get('/list', UserController::class . ':getUsers');
+    $group->get('/profile', UserController::class . ':getInfo');
 })->add($validateJwtMiddleware);
 
 $app->group('/admin', function ($group) {
