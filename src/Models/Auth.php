@@ -124,6 +124,7 @@ class Auth extends Database
                 $this->response['message'] = 'Sesión exitosa.';
                 $this->response['username'] = $accountData[0]['username'];
                 $this->response['user_uuid'] = $accountData[0]['user_uuid'];
+                $this->response['verificado'] = $accountData[0]['verificado'];
                 $this->response['rol'] = $accountData[0]['rol'];
                 $this->response['token'] = $token;
                 return $this->response;
