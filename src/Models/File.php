@@ -160,18 +160,28 @@ class File extends Database
             $fila++;
         }
 
-        // Obtener la fecha y hora actual en formato 'Y-m-d-His'
-        $fechaHora = date('Y-m-d-His');
+        #   // Obtener la fecha y hora actual en formato 'Y-m-d-His'
+        #   $fechaHora = date('Y-m-d-His');
+        #
+        #   // Crear el nombre del archivo
+        #   $fileName = "TRIGGER-{$fechaHora}.xlsx";
+        #
+        #   // Guardar el archivo XLSX con el nombre dinámico
+        #   $writer = new Xlsx($spreadsheet);
+        #   $writer->save($fileName);
+        #
+        #   $this->response['status'] = 'OK';
+        #   $this->response['message'] = 'Documento generado con exito.';
+        #   return $this->response;
 
-        // Crear el nombre del archivo
-        $fileName = "public/TRIGGER-{$fechaHora}.xlsx";
+        // Establecer el tipo de contenido y nombre de archivo para descarga
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="TRIGGER-' . date('Y-m-d-His') . '.xlsx"');
+        header('Cache-Control: max-age=0');
 
-        // Guardar el archivo XLSX con el nombre dinámico
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($fileName);
-
-        $this->response['status'] = 'OK';
-        $this->response['message'] = 'Documento generado con exito.';
-        return $this->response;
+        // Enviar el archivo para descargar en lugar de guardarlo
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
     }
 }
