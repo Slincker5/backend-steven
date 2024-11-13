@@ -67,6 +67,7 @@ $app->group('/document', function ($group) {
     $group->get('/list', FileController::class . ':listadoEscaneado');
     $group->get('/productos-restantes', FileController::class . ':productosRestantes');
     $group->put('/escanear', FileController::class . ':agregarEscaneado');
+    $group->post('/trigger', FileController::class . ':exportarEstado');
 })->add($validateJwtMiddleware);
 
 $app->group('/auth', function ($group) {

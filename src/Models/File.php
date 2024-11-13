@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Database;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class File extends Database
 {
@@ -120,5 +122,45 @@ class File extends Database
             $this->response['articulos'] = $this->busquedaArticulo($articulo, $user_uuid);
             return $this->response;
         }
+    }
+
+    public function productosGlobal($user_uuid)
+    {
+        $sql = 'SELECT * FROM productos WHERE user_uuid = ? ORDER BY fecha DESC';
+        $lista = $this->ejecutarConsulta($sql, [$user_uuid]);
+        return $lista->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function exportarEstado($user_uuid)
+    {
+        $articulos = $this->productosGlobal($user_uuid);
+        // Crear una nueva hoja de cálculo
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        // Especificar los encabezados
+        $sheet->setCellValue('A1', 'Articulo');
+        $sheet->setCellValue('B1', 'Descripcion');
+        $sheet->setCellValue('C1', 'Precio');
+        $sheet->setCellValue('D1', 'Costo');
+        $sheet->setCellValue('E1', 'Antiguedad');
+        $sheet->setCellValue('F1', 'Escaneado');
+        $fila = 2;
+        foreach ($articulos as $articulo) {
+            $sheet->setCellValue('A' . $fila, $articulo[0]['articulo']);
+            $sheet->setCellValue('B' . $fila, $articulo[0]['descripcion']);
+            $sheet->setCellValue('C' . $fila, $articulo[0]['precio']);
+            $sheet->setCellValue('D' . $fila, $articulo[0]['costo']);
+            $sheet->setCellValue('E' . $fila, $articulo[0]['antiguedad']);
+            ($articulo[0]['escaneado'] === 0) ? $sheet->setCellValue('F' . $fila, "NO") :
+                $sheet->setCellValue('F' . $fila, "SI");
+            $fila++;
+        }
+
+        // Guardar el archivo XLSX
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('articulos.xlsx');
+        $this->response['status'] = 'OK';
+        $this->response['message'] = 'Documento generado con exito.';
+        return $this->response;
     }
 }
