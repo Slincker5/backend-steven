@@ -174,14 +174,28 @@ class File extends Database
         #   $this->response['message'] = 'Documento generado con exito.';
         #   return $this->response;
 
-        // Establecer el tipo de contenido y nombre de archivo para descarga
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="TRIGGER-' . date('Y-m-d-His') . '.xlsx"');
-        header('Cache-Control: max-age=0');
+        
+    // Generar el nombre del archivo basado en la fecha y hora
+    $fileName = "TRIGGER-" . date('Y-m-d-His') . ".xlsx";
 
-        // Enviar el archivo para descargar en lugar de guardarlo
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $writer->save('php://output');
-        exit;
+    // Guardar el archivo en una ubicación temporal
+    $tempFilePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $fileName;
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $writer->save($tempFilePath);
+
+    // Configurar las cabeceras para la descarga
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . basename($fileName) . '"');
+    header('Content-Length: ' . filesize($tempFilePath));
+    
+    // Enviar el archivo al cliente
+    readfile($tempFilePath);
+
+    // Borrar el archivo temporal después de enviarlo
+    unlink($tempFilePath);
+
+    // Detener la ejecución del script
+    exit;
     }
 }
