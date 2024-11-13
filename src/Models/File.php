@@ -164,7 +164,7 @@ class File extends Database
         $fechaHora = date('Y-m-d-His');
 
         // Crear el nombre del archivo
-        $fileName = "TRIGGER-{$fechaHora}.xlsx";
+        $fileName = "public/TRIGGER-{$fechaHora}.xlsx";
 
         // Guardar el archivo XLSX con el nombre dinámico
         $writer = new Xlsx($spreadsheet);
