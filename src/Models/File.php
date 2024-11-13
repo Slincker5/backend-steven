@@ -151,7 +151,7 @@ class File extends Database
             $sheet->setCellValue('C' . $fila, $articulo['precio']);
             $sheet->setCellValue('D' . $fila, $articulo['costo']);
             $sheet->setCellValue('E' . $fila, $articulo['antiguedad']);
-            ($articulo[0]['escaneado'] === 0) ? $sheet->setCellValue('F' . $fila, "NO") :
+            ($articulo['escaneado'] === 0) ? $sheet->setCellValue('F' . $fila, "NO") :
                 $sheet->setCellValue('F' . $fila, "SI");
             $fila++;
         }
