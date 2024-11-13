@@ -160,9 +160,16 @@ class File extends Database
             $fila++;
         }
 
-        // Guardar el archivo XLSX
+        // Obtener la fecha y hora actual en formato 'Y-m-d-His'
+        $fechaHora = date('Y-m-d-His');
+
+        // Crear el nombre del archivo
+        $fileName = "TRIGGER-{$fechaHora}.xlsx";
+
+        // Guardar el archivo XLSX con el nombre dinámico
         $writer = new Xlsx($spreadsheet);
-        $writer->save('articulos.xlsx');
+        $writer->save($fileName);
+
         $this->response['status'] = 'OK';
         $this->response['message'] = 'Documento generado con exito.';
         return $this->response;
