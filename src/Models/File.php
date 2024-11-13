@@ -146,11 +146,11 @@ class File extends Database
         $sheet->setCellValue('F1', 'Escaneado');
         $fila = 2;
         foreach ($articulos as $articulo) {
-            $sheet->setCellValue('A' . $fila, $articulo[0]['articulo']);
-            $sheet->setCellValue('B' . $fila, $articulo[0]['descripcion']);
-            $sheet->setCellValue('C' . $fila, $articulo[0]['precio']);
-            $sheet->setCellValue('D' . $fila, $articulo[0]['costo']);
-            $sheet->setCellValue('E' . $fila, $articulo[0]['antiguedad']);
+            $sheet->setCellValue('A' . $fila, $articulo['articulo']);
+            $sheet->setCellValue('B' . $fila, $articulo['descripcion']);
+            $sheet->setCellValue('C' . $fila, $articulo['precio']);
+            $sheet->setCellValue('D' . $fila, $articulo['costo']);
+            $sheet->setCellValue('E' . $fila, $articulo['antiguedad']);
             ($articulo[0]['escaneado'] === 0) ? $sheet->setCellValue('F' . $fila, "NO") :
                 $sheet->setCellValue('F' . $fila, "SI");
             $fila++;
