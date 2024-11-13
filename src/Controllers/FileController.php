@@ -64,4 +64,13 @@ class FileController
         $response->getBody()->write(json_encode($escanear));
         return $response->withHeader('Content-Type', 'application/json');
     }
+
+    public function exportarEstado(Request $request, Response $response, $args)
+    {
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
+        $classFile = new File();
+        $escanear = $classFile->exportarEstado($user_uuid);
+        $response->getBody()->write(json_encode($escanear));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
 }
