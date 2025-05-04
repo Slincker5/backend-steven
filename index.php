@@ -5,6 +5,7 @@ use App\Controllers\FileController;
 use App\Controllers\AuthController;
 use App\Controllers\AdminController;
 use App\Controllers\UserController;
+use App\Controllers\WhatsappController;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Slim\Psr7\Response;
@@ -83,6 +84,10 @@ $app->group('/user', function ($group) {
 
 $app->group('/admin', function ($group) {
     $group->post('/approve-user', AdminController::class . ':verifyUser');
+})->add($validateJwtMiddleware);
+
+$app->group('/whatsapp', function ($group) {
+    $group->get('/get-qr', WhatsappController::class . ':obtenerQr');
 })->add($validateJwtMiddleware);
 
 $app->run();
