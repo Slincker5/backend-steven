@@ -60,55 +60,72 @@ class Whatsapp
 
     public function cerrarSesion($rol)
     {
-        if ($rol === 'Admin') {
+        if ($rol !== 'Admin') {
+            return [
+                'success' => false,
+                'message' => 'No estás autorizado para esta acción.'
+            ];
+        }
 
-            $url = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}/logout/{$this->apiToken}";
+        $baseUrl = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}";
+        $token   = $this->apiToken;
 
-            $curl = curl_init($url);
+        // Paso 1: Verificar estado actual
+        $estadoUrl = "{$baseUrl}/getStateInstance/{$token}";
+        $curl = curl_init($estadoUrl);
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+        ]);
+        $estadoResponse = curl_exec($curl);
+        curl_close($curl);
 
-            curl_setopt_array($curl, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CUSTOMREQUEST => "POST", // método correcto
-                CURLOPT_POSTFIELDS => '{}',      // cuerpo vacío como JSON
-                CURLOPT_HTTPHEADER => [
-                    'Content-Type: application/json'
-                ],
-                CURLOPT_TIMEOUT => 10
-            ]);
+        if (!$estadoResponse) {
+            return [
+                'success' => false,
+                'message' => 'No se pudo verificar el estado de la sesión.'
+            ];
+        }
 
-            $response = curl_exec($curl);
-            $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            curl_close($curl);
+        $estadoData = json_decode($estadoResponse, true);
+        $estado = $estadoData['stateInstance'] ?? null;
 
-            if (!$response) {
-                return [
-                    'success' => false,
-                    'message' => 'No se pudo conectar con la API.'
-                ];
-            }
+        if ($estado !== 'authorized') {
+            return [
+                'success' => false,
+                'message' => "No hay sesión activa que cerrar. Estado actual: {$estado}."
+            ];
+        }
 
-            $data = json_decode($response, true);
+        // Paso 2: Cerrar sesión con GET
+        $logoutUrl = "{$baseUrl}/logout/{$token}";
+        $curl = curl_init($logoutUrl);
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_TIMEOUT => 10
+        ]);
+        $logoutResponse = curl_exec($curl);
+        curl_close($curl);
 
-            if (isset($data['isLogout']) && $data['isLogout'] === true) {
-                return [
-                    'success' => true,
-                    'message' => 'Sesión cerrada correctamente.'
-                ];
-            } elseif ($http_code === 200 && isset($data['isLogout']) && $data['isLogout'] === false) {
-                return [
-                    'success' => false,
-                    'message' => 'La sesión ya estaba cerrada o no se pudo cerrar.'
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'message' => 'Respuesta inesperada: ' . json_encode($data)
-                ];
-            }
+        if (!$logoutResponse) {
+            return [
+                'success' => false,
+                'message' => 'No se pudo conectar al cerrar sesión.'
+            ];
+        }
+
+        $logoutData = json_decode($logoutResponse, true);
+
+        if (isset($logoutData['isLogout']) && $logoutData['isLogout'] === true) {
+            return [
+                'success' => true,
+                'message' => 'Sesión cerrada correctamente.'
+            ];
         } else {
             return [
                 'success' => false,
-                'message' => 'No estas autorizado para esta accion'
+                'message' => 'No se pudo cerrar la sesión o ya estaba cerrada.'
             ];
         }
     }
