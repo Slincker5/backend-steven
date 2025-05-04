@@ -58,25 +58,26 @@ class Whatsapp
         }
     }
 
-
     public function cerrarSesion($rol)
     {
         if ($rol === 'Admin') {
+
             $url = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}/logout/{$this->apiToken}";
 
             $curl = curl_init($url);
 
             curl_setopt_array($curl, [
                 CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_TIMEOUT => 10,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => '{}', // Cuerpo vacío como string JSON
+                CURLOPT_CUSTOMREQUEST => "POST", // método correcto
+                CURLOPT_POSTFIELDS => '{}',      // cuerpo vacío como JSON
                 CURLOPT_HTTPHEADER => [
                     'Content-Type: application/json'
-                ]
+                ],
+                CURLOPT_TIMEOUT => 10
             ]);
 
             $response = curl_exec($curl);
+            $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);
 
             if (!$response) {
@@ -93,16 +94,21 @@ class Whatsapp
                     'success' => true,
                     'message' => 'Sesión cerrada correctamente.'
                 ];
+            } elseif ($http_code === 200 && isset($data['isLogout']) && $data['isLogout'] === false) {
+                return [
+                    'success' => false,
+                    'message' => 'La sesión ya estaba cerrada o no se pudo cerrar.'
+                ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'No se pudo cerrar la sesión o ya estaba cerrada.'
+                    'message' => 'Respuesta inesperada: ' . json_encode($data)
                 ];
             }
         } else {
             return [
                 'success' => false,
-                'message' => 'No estas autorizado para esta accion.'
+                'message' => 'No estas autorizado para esta accion'
             ];
         }
     }
