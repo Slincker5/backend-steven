@@ -57,4 +57,53 @@ class Whatsapp
             ];
         }
     }
+
+
+    public function cerrarSesion($rol)
+    {
+        if ($rol === 'Admin') {
+            $url = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}/logout/{$this->apiToken}";
+
+            $curl = curl_init($url);
+
+            curl_setopt_array($curl, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 10,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => '{}', // Cuerpo vacío como string JSON
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json'
+                ]
+            ]);
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+
+            if (!$response) {
+                return [
+                    'success' => false,
+                    'message' => 'No se pudo conectar con la API.'
+                ];
+            }
+
+            $data = json_decode($response, true);
+
+            if (isset($data['isLogout']) && $data['isLogout'] === true) {
+                return [
+                    'success' => true,
+                    'message' => 'Sesión cerrada correctamente.'
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'No se pudo cerrar la sesión o ya estaba cerrada.'
+                ];
+            }
+        } else {
+            return [
+                'success' => false,
+                'message' => 'No estas autorizado para esta accion.'
+            ];
+        }
+    }
 }

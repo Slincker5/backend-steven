@@ -18,4 +18,14 @@ class   WhatsappController
         $response->getBody()->write(json_encode($qr));
         return $response;
     }
+
+    function cerrarSesion($request, $response, $args)
+    {
+        $rol = $request->getAttribute('payload')->data->rol;
+        $classAuth = new Whatsapp();
+        $logout = $classAuth->cerrarSesion($rol);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($logout));
+        return $response;
+    }
 }
