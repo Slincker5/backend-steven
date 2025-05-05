@@ -162,7 +162,7 @@ public function obtenerInfoWhatsapp() {
 
         return [
             'phone' => $data['phone'],
-            'avatar'   => $data['avatar'] ?? 'https://cintillos-plazamundo.netlify.app/usuario.png'
+            'avatar'   => $data['avatar'] == "" ? "https://cintillos-plazamundo.netlify.app/usuario.png" : $data["avatar"]
         ];
 }
 
