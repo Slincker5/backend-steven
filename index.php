@@ -90,6 +90,7 @@ $app->group('/whatsapp', function ($group) {
     $group->get('/get-qr', WhatsappController::class . ':obtenerQr');
     $group->get('/logout', WhatsappController::class . ':cerrarSesion');
     $group->get('/log-status', WhatsappController::class . ':logueado');
+    $group->get('/profile', WhatsappController::class . ':obtenerInfoWhatsapp');
 })->add($validateJwtMiddleware);
 
 $app->run();

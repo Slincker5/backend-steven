@@ -130,21 +130,44 @@ class Whatsapp
         }
     }
 
-    public function logueado() {
+    public function logueado()
+    {
         $url = "https://api.green-api.com/waInstance{$this->idInstancia}/getStateInstance/{$this->apiToken}";
-    
+
         // Iniciar cURL
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    
+
         // Ejecutar la petición
         $response = curl_exec($ch);
         curl_close($ch);
-    
+
         // Decodificar respuesta
         $data = json_decode($response, true);
-    
+
         // Verificar estado
         return $data;
+    }
+
+    public function obtenerInfoWhatsapp()
+    {
+        $url = "https://api.green-api.com/waInstance{$this->idInstancia}/getSettings/{$this->apiToken}";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if (isset($data['wid'])) {
+            return [
+                'numero' => explode("@", $data['wid'])[0],
+                'nombre' => $data['name'] ?? 'Desconocido',
+                'foto'   => $data['avatar'] ?? null
+            ];
+        }
+
+        return null;
     }
 }

@@ -37,4 +37,13 @@ class   WhatsappController
         $response->getBody()->write(json_encode($logout));
         return $response;
     }
+
+    function obtenerInfoWhatsapp($request, $response, $args)
+    {
+        $classAuth = new Whatsapp();
+        $logout = $classAuth->obtenerInfoWhatsapp();
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($logout));
+        return $response;
+    }
 }
