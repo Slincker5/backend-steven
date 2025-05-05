@@ -89,6 +89,7 @@ $app->group('/admin', function ($group) {
 $app->group('/whatsapp', function ($group) {
     $group->get('/get-qr', WhatsappController::class . ':obtenerQr');
     $group->get('/logout', WhatsappController::class . ':cerrarSesion');
+    $group->get('/log-status', WhatsappController::class . ':logueado');
 })->add($validateJwtMiddleware);
 
 $app->run();

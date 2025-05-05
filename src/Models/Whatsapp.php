@@ -42,7 +42,7 @@ class Whatsapp
             } elseif ($data['type'] === 'alreadyLogged' || $data['message'] === 'NOT_AUTHORIZED') {
                 return [
                     'success' => false,
-                    'message' => '✅ Ya autorizado o el QR ha expirado.'
+                    'message' => 'Ya autorizado o el QR ha expirado.'
                 ];
             } else {
                 return [
@@ -128,5 +128,23 @@ class Whatsapp
                 'message' => 'No se pudo cerrar la sesión o ya estaba cerrada.'
             ];
         }
+    }
+
+    public function logueado() {
+        $url = "https://api.green-api.com/waInstance{$this->idInstancia}/getStateInstance/{$this->apiToken}";
+    
+        // Iniciar cURL
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        // Ejecutar la petición
+        $response = curl_exec($ch);
+        curl_close($ch);
+    
+        // Decodificar respuesta
+        $data = json_decode($response, true);
+    
+        // Verificar estado
+        return $data;
     }
 }

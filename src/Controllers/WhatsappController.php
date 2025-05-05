@@ -28,4 +28,13 @@ class   WhatsappController
         $response->getBody()->write(json_encode($logout));
         return $response;
     }
+
+    function logueado($request, $response, $args)
+    {
+        $classAuth = new Whatsapp();
+        $logout = $classAuth->logueado();
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($logout));
+        return $response;
+    }
 }
