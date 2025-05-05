@@ -149,25 +149,28 @@ class Whatsapp
         return $data;
     }
 
-    public function obtenerInfoWhatsapp()
-    {
-        $url = "https://api.green-api.com/waInstance{$this->idInstancia}/getSettings/{$this->apiToken}";
+public function obtenerInfoWhatsapp() {
+    $url = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}/getWaSettings/{$this->apiToken}";
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $data = json_decode($response, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
 
-        #if (isset($data['wid'])) {
-        #    return [
-        #        'numero' => explode("@", $data['wid'])[0],
-        #        'nombre' => $data['name'] ?? 'Desconocido',
-        #        'foto'   => $data['avatar'] ?? null
-        #    ];
-        #}
+    $data = json_decode($response, true);
 
-        return $data;
-    }
+    #if (isset($data['wid'])) {
+    #    return [
+    #        'numero' => explode("@", $data['wid'])[0],
+    #        'nombre' => $data['name'] ?? 'Desconocido',
+    #        'foto'   => $data['avatar'] ?? null
+    #    ];
+    #}
+
+    return $data;
+}
+
+
+
 }
