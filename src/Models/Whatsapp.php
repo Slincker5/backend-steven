@@ -149,23 +149,21 @@ class Whatsapp
         return $data;
     }
 
-public function obtenerInfoWhatsapp() {
-    $url = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}/getWaSettings/{$this->apiToken}";
+    public function obtenerInfoWhatsapp()
+    {
+        $url = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}/getWaSettings/{$this->apiToken}";
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    $response = curl_exec($ch);
-    curl_close($ch);
+        $response = curl_exec($ch);
+        curl_close($ch);
 
-    $data = json_decode($response, true);
+        $data = json_decode($response, true);
 
         return [
             'phone' => $data['phone'],
             'avatar'   => $data['avatar'] == "" ? "https://cintillos-plazamundo.netlify.app/usuario.png" : $data["avatar"]
         ];
-}
-
-
-
+    }
 }
