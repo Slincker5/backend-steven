@@ -160,14 +160,10 @@ public function obtenerInfoWhatsapp() {
 
     $data = json_decode($response, true);
 
-    if (isset($data['wid'])) {
         return [
             'phone' => explode("@", $data['wid'])[0],
             'avatar'   => $data['avatar'] ?? 'https://cintillos-plazamundo.netlify.app/usuario.png'
         ];
-    }
-
-    return null;
 }
 
 
