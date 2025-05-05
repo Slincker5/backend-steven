@@ -160,14 +160,14 @@ class Whatsapp
 
         $data = json_decode($response, true);
 
-        if (isset($data['wid'])) {
-            return [
-                'numero' => explode("@", $data['wid'])[0],
-                'nombre' => $data['name'] ?? 'Desconocido',
-                'foto'   => $data['avatar'] ?? null
-            ];
-        }
+        #if (isset($data['wid'])) {
+        #    return [
+        #        'numero' => explode("@", $data['wid'])[0],
+        #        'nombre' => $data['name'] ?? 'Desconocido',
+        #        'foto'   => $data['avatar'] ?? null
+        #    ];
+        #}
 
-        return null;
+        return $data;
     }
 }
