@@ -51,7 +51,7 @@ class Categoria extends Database
 
     public function obtenerCategorias($rol)
     {
-        if ($rol !== 'Admin' || $rol !== 'Editor') {
+        if ($rol !== 'Admin' && $rol !== 'Editor') {
             return "No estas autorizado para esta accion";
         }
         $sql = 'SELECT uuid, titulo, user_uuid, fecha FROM categoria_mensaje ORDER BY fecha DESC';
