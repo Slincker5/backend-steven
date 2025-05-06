@@ -13,7 +13,7 @@ class Categoria extends Database
 
     public function __construct($titulo)
     {
-        $titulo = $this->titulo;
+        $this->titulo = $titulo;
     }
 
     private function validarTitulo($title)
@@ -21,7 +21,6 @@ class Categoria extends Database
         if (empty($title)) {
             return true;
         }
-        return false;
     }
 
     public function crearCategoria($rol)
@@ -32,7 +31,6 @@ class Categoria extends Database
             if ($this->validarTitulo($this->titulo)) {
                 $response['status'] = 'error';
                 $response['message'] = 'El titulo no puede estar vacio.';
-                $response['data'] = $this->titulo;
                 return $response;
             }
 
