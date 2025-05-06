@@ -98,5 +98,6 @@ $app->group('/whatsapp', function ($group) {
 
 $app->group('/category', function ($group) {
     $group->post('/new', CategoriaController::class . ':crearCategoria');
+    $group->get('/list', CategoriaController::class . ':obtenerCategorias');
 })->add($validateJwtMiddleware);
 $app->run();

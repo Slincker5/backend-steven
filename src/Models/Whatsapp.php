@@ -12,7 +12,7 @@ class Whatsapp
 
     public function obtenerQr($rol)
     {
-        if ($rol === 'Admin') {
+        if ($rol !== 'Admin' || $rol !== 'Editor') {
             $url = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}/qr/{$this->apiToken}";
 
             $curl = curl_init($url);
@@ -60,7 +60,7 @@ class Whatsapp
 
     public function cerrarSesion($rol)
     {
-        if ($rol !== 'Admin') {
+        if ($rol !== 'Admin' || $rol !== 'Editor') {
             return [
                 'success' => false,
                 'message' => 'No estás autorizado para esta acción.'

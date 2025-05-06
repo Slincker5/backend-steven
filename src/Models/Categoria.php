@@ -12,7 +12,7 @@ class Categoria extends Database
     private $titulo;
     public $response = [];
 
-    public function __construct($titulo)
+    public function __construct($titulo = '')
     {
         $this->titulo = $titulo;
     }
@@ -24,9 +24,9 @@ class Categoria extends Database
         }
     }
 
-    public function crearCategoria($rol)
+    public function crearCategoria($rol, $user_uuid)
     {
-        if ($rol !== 'Admin') {
+        if ($rol !== 'Admin' || $rol !== 'Editor') {
             return "No estas autorizado para esta accion";
         } else {
             if ($this->validarTitulo($this->titulo)) {
@@ -40,13 +40,23 @@ class Categoria extends Database
             $uuid = $uuidFactory->uuid4();
             $categoria_uuid = $uuid->toString();
 
-            $sql = 'INSERT INTO categoria_mensaje (uuid, titulo) VALUES (?, ?)';
-            $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo]);
+            $sql = 'INSERT INTO categoria_mensaje (uuid, titulo, user_uuid) VALUES (?, ?, ?)';
+            $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo, $user_uuid]);
             if ($consulta) {
                 $response['status'] = "ok";
                 $response['message'] = "Categoria creada exitosamente.";
                 return $response;
             }
         }
+    }
+
+    public function obtenerCategorias($rol) {
+        if($rol !== 'Admin' || $rol !== 'Editor'){
+            return "No estas autorizado para esta accion";
+        }
+        $sql = 'SELECT uuid, titulo, user_uuid, fecha FROM categoria_mensaje ORDER BY fecha DESC';
+        $consulta = $this->ejecutarConsulta($sql);
+        $list = $consulta->fetchAll(\PDO::FETCH_ASSOC);
+        return $list;
     }
 }
