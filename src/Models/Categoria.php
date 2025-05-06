@@ -26,32 +26,32 @@ class Categoria extends Database
 
     public function crearCategoria($rol, $user_uuid)
     {
-        if ($rol !== 'Admin') {
+        if ($rol !== 'Admin' && $rol !== 'Editor') {
             return "No estas autorizado para esta accion 1";
-        } else {
-            if ($this->validarTitulo($this->titulo)) {
-                $response['status'] = 'error';
-                $response['message'] = 'El titulo no puede estar vacio.';
-                return $response;
-            }
+        }
+        if ($this->validarTitulo($this->titulo)) {
+            $response['status'] = 'error';
+            $response['message'] = 'El titulo no puede estar vacio.';
+            return $response;
+        }
 
-            #GENERANDO UN UUID UNICO PARA EL PERFIL
-            $uuidFactory = new UuidFactory();
-            $uuid = $uuidFactory->uuid4();
-            $categoria_uuid = $uuid->toString();
+        #GENERANDO UN UUID UNICO PARA EL PERFIL
+        $uuidFactory = new UuidFactory();
+        $uuid = $uuidFactory->uuid4();
+        $categoria_uuid = $uuid->toString();
 
-            $sql = 'INSERT INTO categoria_mensaje (uuid, titulo, user_uuid) VALUES (?, ?, ?)';
-            $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo, $user_uuid]);
-            if ($consulta) {
-                $response['status'] = "ok";
-                $response['message'] = "Categoria creada exitosamente.";
-                return $response;
-            }
+        $sql = 'INSERT INTO categoria_mensaje (uuid, titulo, user_uuid) VALUES (?, ?, ?)';
+        $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo, $user_uuid]);
+        if ($consulta) {
+            $response['status'] = "ok";
+            $response['message'] = "Categoria creada exitosamente.";
+            return $response;
         }
     }
 
-    public function obtenerCategorias($rol) {
-        if($rol !== 'Admin' || $rol !== 'Editor'){
+    public function obtenerCategorias($rol)
+    {
+        if ($rol !== 'Admin' || $rol !== 'Editor') {
             return "No estas autorizado para esta accion";
         }
         $sql = 'SELECT uuid, titulo, user_uuid, fecha FROM categoria_mensaje ORDER BY fecha DESC';
