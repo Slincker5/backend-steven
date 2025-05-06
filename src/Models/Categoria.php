@@ -21,6 +21,7 @@ class Categoria extends Database
         if (empty($titulo)) {
             return true;
         }
+        return false;
     }
 
     public function crearCategoria($rol)
