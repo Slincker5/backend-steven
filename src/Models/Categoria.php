@@ -42,7 +42,7 @@ class Categoria extends Database
 
             $sql = 'INSERT INTO categoria_mensaje (uuid, titulo) VALUES (?, ?)';
             $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo]);
-            if (!$consulta) {
+            if ($consulta) {
                 $response['status'] = "ok";
                 $response['message'] = "Categoria creada exitosamente.";
                 return $response;
