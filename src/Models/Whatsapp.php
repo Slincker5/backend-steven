@@ -12,7 +12,7 @@ class Whatsapp
 
     public function obtenerQr($rol)
     {
-        if ($rol !== 'Admin' && $rol !== 'Editor') {
+        if ($rol === 'Admin' && $rol === 'Editor') {
             $url = "https://7105.api.greenapi.com/waInstance{$this->idInstancia}/qr/{$this->apiToken}";
 
             $curl = curl_init($url);
