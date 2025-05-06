@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ramsey\Uuid\UuidFactory;
 use App\Models\Database;
+use Slim\Psr7\Response;
 
 class Categoria extends Database
 {
@@ -43,6 +44,10 @@ class Categoria extends Database
             $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo]);
             if (!$consulta) {
                 return "Error al realizar peticion";
+            }else{
+                $response['status'] = "ok";
+                $response['message'] = "Categoria creada exitosamente.";
+                return $response;
             }
         }
     }
