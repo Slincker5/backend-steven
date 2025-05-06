@@ -6,6 +6,7 @@ use App\Controllers\AuthController;
 use App\Controllers\AdminController;
 use App\Controllers\UserController;
 use App\Controllers\WhatsappController;
+use App\Controllers\CategoriaController;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Slim\Psr7\Response;
@@ -93,4 +94,9 @@ $app->group('/whatsapp', function ($group) {
     $group->get('/profile', WhatsappController::class . ':obtenerInfoWhatsapp');
 })->add($validateJwtMiddleware);
 
+// rutas categoria mensajes
+
+$app->group('/category', function ($group) {
+    $group->post('/new', CategoriaController::class . ':crearCategoria');
+})->add($validateJwtMiddleware);
 $app->run();
