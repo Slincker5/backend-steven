@@ -17,11 +17,19 @@ class Categoria extends Database
         $this->titulo = $titulo;
     }
 
-    private function validarTitulo($title)
+    private static function validarTitulo($titulo)
     {
-        if (empty($title)) {
+        if (empty($titulo)) {
             return true;
         }
+    }
+
+    public static function existeCategoria($titulo, $user_uuid)
+    {
+        $sql = "SELECT COUNT(*) as total FROM categoria_mensaje WHERE titulo = ? AND user_uuid = ?";
+        $consulta = $this->ejecutarConsulta($sql, [$this->titulo, $user_uuid]);
+        $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
+        return $resultado['total'];
     }
 
     public function crearCategoria($rol, $user_uuid)
@@ -29,9 +37,13 @@ class Categoria extends Database
         if ($rol !== 'Admin' && $rol !== 'Editor') {
             return "No estas autorizado para esta accion 1";
         }
-        if ($this->validarTitulo($this->titulo)) {
+        if (self::validarTitulo($this->titulo)) {
             $response['status'] = 'error';
             $response['message'] = 'El titulo no puede estar vacio.';
+            return $response;
+        } else if(self::existeCategoria($this->titulo, $user_uuid)){
+            $response['status'] = 'error';
+            $response['message'] = 'la categoria ya existe.';
             return $response;
         }
 
