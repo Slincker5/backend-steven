@@ -7,6 +7,7 @@ use App\Controllers\AdminController;
 use App\Controllers\UserController;
 use App\Controllers\WhatsappController;
 use App\Controllers\CategoriaController;
+use App\Controllers\MensajeController;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Slim\Psr7\Response;
@@ -99,5 +100,10 @@ $app->group('/whatsapp', function ($group) {
 $app->group('/category', function ($group) {
     $group->post('/new', CategoriaController::class . ':crearCategoria');
     $group->get('/list', CategoriaController::class . ':obtenerCategorias');
+})->add($validateJwtMiddleware);
+
+$app->group('/messages', function ($group) {
+    $group->post('/new', MensajeController::class . ':crearMensaje');
+    $group->get('/list', MensajeController::class . ':obtenerMensajes');
 })->add($validateJwtMiddleware);
 $app->run();
