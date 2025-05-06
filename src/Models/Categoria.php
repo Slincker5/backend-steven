@@ -16,9 +16,9 @@ class Categoria extends Database
         $titulo = $this->titulo;
     }
 
-    private static function validarTitulo($titulo)
+    private static function validarTitulo($title)
     {
-        if (empty($titulo)) {
+        if (empty($title)) {
             return true;
         }
         return false;

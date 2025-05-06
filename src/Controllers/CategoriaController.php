@@ -16,7 +16,7 @@ class   CategoriaController
         $classAuth = new Categoria($body['titulo']);
         $categoria = $classAuth->crearCategoria($rol);
         $response = $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode($body['titulo']));
+        $response->getBody()->write(json_encode($categoria));
         return $response;
     }
 
