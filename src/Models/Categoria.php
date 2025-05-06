@@ -16,7 +16,7 @@ class Categoria extends Database
         $titulo = $this->titulo;
     }
 
-    private static function validarTitulo($title)
+    private function validarTitulo($title)
     {
         if (empty($title)) {
             return true;
@@ -29,7 +29,7 @@ class Categoria extends Database
         if ($rol !== 'Admin') {
             return "No estas autorizado para esta accion";
         } else {
-            if (self::validarTitulo($this->titulo)) {
+            if ($this->validarTitulo($this->titulo)) {
                 $response['status'] = 'error';
                 $response['message'] = 'El titulo no puede estar vacio.';
                 $response['data'] = $this->titulo;
