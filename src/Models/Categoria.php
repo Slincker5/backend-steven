@@ -26,7 +26,7 @@ class Categoria extends Database
 
     public function crearCategoria($rol, $user_uuid)
     {
-        if ($rol !== 'Admin' || $rol !== 'Editor') {
+        if ($rol !== 'Admin') {
             return "No estas autorizado para esta accion 1";
         } else {
             if ($this->validarTitulo($this->titulo)) {
