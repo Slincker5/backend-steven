@@ -32,6 +32,7 @@ class Categoria extends Database
             if (self::validarTitulo($this->titulo)) {
                 $response['status'] = 'error';
                 $response['message'] = 'El titulo no puede estar vacio.';
+                $response['data'] = self::validarTitulo($this->titulo);
                 return $response;
             }
 
