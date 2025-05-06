@@ -41,7 +41,7 @@ class Categoria extends Database
             $response['status'] = 'error';
             $response['message'] = 'El titulo no puede estar vacio.';
             return $response;
-        } else if(self::existeCategoria($this->titulo, $user_uuid)){
+        } else if($this->existeCategoria($this->titulo, $user_uuid)){
             $response['status'] = 'error';
             $response['message'] = 'la categoria ya existe.';
             return $response;
