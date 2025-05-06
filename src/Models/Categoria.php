@@ -24,10 +24,10 @@ class Categoria extends Database
         }
     }
 
-    public static function existeCategoria($titulo, $user_uuid)
+    public function existeCategoria($titulo, $user_uuid)
     {
         $sql = "SELECT COUNT(*) as total FROM categoria_mensaje WHERE titulo = ? AND user_uuid = ?";
-        $consulta = $this->ejecutarConsulta($sql, [$this->titulo, $user_uuid]);
+        $consulta = $this->ejecutarConsulta($sql, [$titulo, $user_uuid]);
         $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
         return $resultado['total'];
     }
