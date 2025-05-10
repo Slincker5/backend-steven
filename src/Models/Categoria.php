@@ -35,29 +35,32 @@ class Categoria extends Database
     public function crearCategoria($rol, $user_uuid)
     {
         if ($rol !== 'Admin' && $rol !== 'Editor') {
-            return "No estas autorizado para esta accion 1";
-        }
-        if (self::validarTitulo($this->titulo)) {
-            $response['status'] = 'error';
-            $response['message'] = 'El titulo no puede estar vacio.';
+            $response['status'] = "error";
+            $response['message'] = "No estas autorizado para esta accion";
             return $response;
-        } else if($this->existeCategoria($this->titulo, $user_uuid)){
-            $response['status'] = 'error';
-            $response['message'] = 'la categoria ya existe.';
-            return $response;
-        }
+        } else {
+            if (self::validarTitulo($this->titulo)) {
+                $response['status'] = 'error';
+                $response['message'] = 'El titulo no puede estar vacio.';
+                return $response;
+            } else if ($this->existeCategoria($this->titulo, $user_uuid)) {
+                $response['status'] = 'error';
+                $response['message'] = 'la categoria ya existe.';
+                return $response;
+            }
 
-        #GENERANDO UN UUID UNICO PARA EL PERFIL
-        $uuidFactory = new UuidFactory();
-        $uuid = $uuidFactory->uuid4();
-        $categoria_uuid = $uuid->toString();
+            #GENERANDO UN UUID UNICO PARA EL PERFIL
+            $uuidFactory = new UuidFactory();
+            $uuid = $uuidFactory->uuid4();
+            $categoria_uuid = $uuid->toString();
 
-        $sql = 'INSERT INTO categoria_mensaje (uuid, titulo, user_uuid) VALUES (?, ?, ?)';
-        $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo, $user_uuid]);
-        if ($consulta) {
-            $response['status'] = "OK";
-            $response['message'] = "Categoria creada exitosamente.";
-            return $response;
+            $sql = 'INSERT INTO categoria_mensaje (uuid, titulo, user_uuid) VALUES (?, ?, ?)';
+            $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo, $user_uuid]);
+            if ($consulta) {
+                $response['status'] = "OK";
+                $response['message'] = "Categoria creada exitosamente.";
+                return $response;
+            }
         }
     }
 
