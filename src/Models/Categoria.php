@@ -34,11 +34,8 @@ class Categoria extends Database
 
     public function crearCategoria($rol, $user_uuid)
     {
-        if ($rol !== 'Admin' && $rol !== 'Editor') {
-            $response['status'] = "error";
-            $response['message'] = "No estas autorizado para esta accion";
-            return $response;
-        } else {
+        if ($rol === 'Admin' || $rol === 'Editor') {
+
             if (self::validarTitulo($this->titulo)) {
                 $response['status'] = 'error';
                 $response['message'] = 'El titulo no puede estar vacio.';
@@ -61,6 +58,10 @@ class Categoria extends Database
                 $response['message'] = "Categoria creada exitosamente.";
                 return $response;
             }
+        } else {
+            $response['status'] = "error";
+            $response['message'] = "No estas autorizado para esta accion";
+            return $response;
         }
     }
 
