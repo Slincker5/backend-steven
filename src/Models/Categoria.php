@@ -34,7 +34,7 @@ class Categoria extends Database
 
     public function crearCategoria($rol, $user_uuid)
     {
-        if ($rol === 'Admin' || $rol === 'Editor') {
+        if ($rol === 'Admin' && $rol === 'Editor') {
 
             if (self::validarTitulo($this->titulo)) {
                 $response['status'] = 'error';
