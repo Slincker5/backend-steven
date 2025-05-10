@@ -55,7 +55,7 @@ class Categoria extends Database
             $consulta = $this->ejecutarConsulta($sql, [$categoria_uuid, $this->titulo, $user_uuid]);
             if ($consulta) {
                 $response['status'] = "OK";
-                $response['message'] = "Categoria creada exitosamente.";
+                $response['message'] = "Categoria creada exitosamente. " + $rol;
                 return $response;
             }
         } else {
