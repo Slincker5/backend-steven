@@ -28,10 +28,6 @@ class Cliente extends Database
             $this->response["status"] = "error";
             $this->response["message"] = "La fila numero no puede estar vacia.";
             return $this->response;
-        } else if (!is_numeric($this->cliente)) {
-            $this->response["status"] = "error";
-            $this->response["message"] = "La fila cliente solo admite numeros o id de cliente.";
-            return $this->response;
         } else {
             #GENERANDO UN UUID UNICO PARA EL PERFIL
             $uuidFactory = new UuidFactory();
