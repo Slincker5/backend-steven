@@ -14,7 +14,7 @@ class Cliente extends Database
     protected $numero;
     protected $fecha;
 
-    public function __construct($cliente = '', $nombre = '', $numero, $fecha = '')
+    public function __construct($cliente = '', $nombre = '', $numero ='', $fecha = '')
     {
         $this->cliente = $cliente;
         $this->nombre = $nombre;
