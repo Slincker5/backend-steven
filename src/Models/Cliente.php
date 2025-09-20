@@ -27,6 +27,7 @@ class Cliente extends Database
         if (empty(trim($this->numero)) || is_numeric($this->numero)) {
             $this->response["status"] = "error";
             $this->response["message"] = "La fila numero no puede estar vacia.";
+            $this->response["num"] = $this->numero;
             return $this->response;
         } else if (is_numeric($this->cliente)) {
             $this->response["status"] = "error";
