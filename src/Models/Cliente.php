@@ -24,7 +24,7 @@ class Cliente extends Database
 
     public function cargarBase($user_uuid)
     {
-        if (empty(trim($this->numero)) || !is_numeric($this->numero)) {
+        if (empty(trim($this->numero)) || is_numeric($this->numero)) {
             $this->response["status"] = "error";
             $this->response["message"] = "La fila numero no puede estar vacia.";
             return $this->response;
