@@ -16,18 +16,10 @@ class Cliente extends Database
 
     public function __construct($cliente = '', $nombre = '', $numero, $fecha = '')
     {
-        $this->cliente = $$cliente;
+        $this->cliente = $cliente;
         $this->nombre = $nombre;
         $this->numero = $numero;
         $this->fecha = $fecha;
-    }
-
-
-    private static function validarmensaje($mensaje)
-    {
-        if (empty($mensaje)) {
-            return true;
-        }
     }
 
     public function cargarBase($user_uuid)
