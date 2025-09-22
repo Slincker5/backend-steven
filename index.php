@@ -105,7 +105,7 @@ $app->group('/category', function ($group) {
 
 $app->group('/messages', function ($group) {
     $group->post('/new', MensajeController::class . ':crearMensaje');
-    $group->get('/list', MensajeController::class . ':obtenerPlantilla');
+    $group->post('/list', MensajeController::class . ':obtenerPlantilla');
 })->add($validateJwtMiddleware);
 
 $app->group('/base', function ($group) {
