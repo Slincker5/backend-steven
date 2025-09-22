@@ -75,4 +75,5 @@ class Categoria extends Database
         $list = $consulta->fetchAll(\PDO::FETCH_ASSOC);
         return $list;
     }
+    
 }

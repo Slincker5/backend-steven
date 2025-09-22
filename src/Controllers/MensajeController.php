@@ -21,11 +21,12 @@ class  MensajeController
         return $response;
     }
 
-    function obtenerMensajes($request, $response, $args)
+    function obtenerPlantilla($request, $response, $args)
     {
-        $rol = $request->getAttribute('payload')->data->rol;
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
+        $body = $request->getParsedBody();
         $classAuth = new Mensaje();
-        $categoria = $classAuth->obtenerMensajes($rol);
+        $categoria = $classAuth->obtenerPlantilla($user_uuid, $body["categoria"]);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
         return $response;

@@ -62,13 +62,10 @@ class Mensaje extends Database
         }
     }
 
-    public function obtenerMensajes($rol)
+    public function obtenerPlantilla($user_uuid, $categoria)
     {
-        if ($rol !== 'Admin' && $rol !== 'Editor') {
-            return "No estas autorizado para esta accion";
-        }
-        $sql = 'SELECT * FROM mensajes_personalizados ORDER BY fecha DESC';
-        $consulta = $this->ejecutarConsulta($sql);
+        $sql = 'SELECT uuid, mensaje, categoria, user_uuid FROM mensajes_personalizados WHERE user_uuid = ? AND categoria = ? ORDER BY fecha DESC';
+        $consulta = $this->ejecutarConsulta($sql, [$user_uuid, $categoria]);
         $list = $consulta->fetchAll(\PDO::FETCH_ASSOC);
         return $list;
     }
