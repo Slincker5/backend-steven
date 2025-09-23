@@ -12,7 +12,8 @@ class AmazonS3Controller
     {
         $files = $request->getUploadedFiles();
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
-        // Solo procesar si existe el input "file"
+
+        // Validar que exista archivo
         if (!isset($files['file'])) {
             $response->getBody()->write(json_encode([
                 "error" => "No se seleccionó archivo"
@@ -22,17 +23,28 @@ class AmazonS3Controller
 
         $file = $files['file'];
 
-        // Guardar temporal y generar nombre único
-        $name = uniqid() . "-" . $file->getClientFilename();
-        $temp = sys_get_temp_dir() . "/" . $name;
+        // Obtener extensión del archivo original
+        $originalName = $file->getClientFilename();
+        $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+        // Guardar temporal con nombre único (no importa el original)
+        $temp = sys_get_temp_dir() . "/" . uniqid() . "." . $extension;
         $file->moveTo($temp);
 
-        // Subir a S3
-        $s3 = new AmazonS3();
-        $url = $s3->uploadFile($temp, "uploads/" . $user_uuid . "/" . $name);
+        // Generar key en S3 con el user_uuid como nombre final
+        $keyName = "uploads/" . $user_uuid . "." . $extension;
 
-        // Respuesta JSON
-        $response->getBody()->write(json_encode($url));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        try {
+            $s3 = new AmazonS3();
+            $url = $s3->uploadFile($temp, $keyName);
+
+            $response->getBody()->write(json_encode($url));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode([
+                "error" => $e->getMessage()
+            ]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+        }
     }
 }

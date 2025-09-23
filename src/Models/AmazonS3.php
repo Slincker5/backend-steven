@@ -21,7 +21,7 @@ class AmazonS3
             throw new \Exception("Error cargando variables de entorno: " . $e->getMessage());
         }
 
-        $this->bucket = $_ENV['AMAZON_S3_BUCKET_PROFILES'];
+        $this->bucket = $_ENV['AMAZON_S3_BUCKET_LABEL'];
         $this->region = $_ENV['AMAZON_S3_REGION'];
 
         $this->s3Client = new S3Client([
