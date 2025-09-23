@@ -10,7 +10,7 @@ class AmazonS3
     private $s3Client;
     private $bucket;
     private $region;
-    private $cdnDomain = "https://cintillos.multimarcas.app";
+    private $cdnDomain = "https://cdn.multimarcas.app";
 
     public function __construct()
     {
@@ -57,6 +57,7 @@ class AmazonS3
 
         // Retornar URL desde el CDN
         return [
+            "status" => "ok",
             "url" => "{$this->cdnDomain}/{$keyName}"
         ];
     }
