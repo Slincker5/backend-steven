@@ -4,6 +4,7 @@ use Slim\Factory\AppFactory;
 use App\Controllers\FileController;
 use App\Controllers\AuthController;
 use App\Controllers\AdminController;
+use App\Controllers\AmazonS3Controller;
 use App\Controllers\UserController;
 use App\Controllers\WhatsappController;
 use App\Controllers\CategoriaController;
@@ -112,4 +113,10 @@ $app->group('/base', function ($group) {
     $group->post('/create', ClienteController::class . ':cargarBase');
     $group->get('/list', ClienteController::class . ':obtenerBase');
 })->add($validateJwtMiddleware);
+
+$app->group('/files', function ($group) {
+    $group->post('/upload', AmazonS3Controller::class . ':upload');
+})->add($validateJwtMiddleware);
+
+
 $app->run();
