@@ -32,7 +32,7 @@ class AmazonS3Controller
         $file->moveTo($temp);
 
         // Generar key en S3 con el user_uuid como nombre final
-        $keyName = "uploads/" . $user_uuid . "." . $extension;
+        $keyName = "uploads/" . $user_uuid . "/" . uniqid() . "." . $extension;
 
         try {
             $s3 = new AmazonS3();
