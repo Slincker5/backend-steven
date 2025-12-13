@@ -29,7 +29,6 @@ class Cliente extends Database
             $this->response["message"] = "La fila numero no puede estar vacia.";
             return $this->response;
         } else {
-            self::eliminarBaseActual($user_uuid);
             #GENERANDO UN UUID UNICO PARA EL PERFIL
             $uuid = $uuidFactory->uuid4();
             $client_uuid = $uuid->toString();
