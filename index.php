@@ -112,6 +112,7 @@ $app->group('/messages', function ($group) {
 $app->group('/base', function ($group) {
     $group->post('/create', ClienteController::class . ':cargarBase');
     $group->get('/list', ClienteController::class . ':obtenerBase');
+    $group->delete('/delete', ClienteController::class . ':eliminarBase');
 })->add($validateJwtMiddleware);
 
 $app->group('/files', function ($group) {

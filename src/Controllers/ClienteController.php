@@ -21,6 +21,17 @@ class  ClienteController
         return $response;
     }
 
+    function eliminarBase($request, $response, $args)
+    {
+        $rol = $request->getAttribute('payload')->data->rol;
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
+        $classAuth = new Cliente();
+        $categoria = $classAuth->eliminarBaseActual($user_uuid);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($categoria));
+        return $response;
+    }
+
     function obtenerBase($request, $response, $args)
     {
         $rol = $request->getAttribute('payload')->data->rol;

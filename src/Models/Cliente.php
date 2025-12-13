@@ -31,7 +31,6 @@ class Cliente extends Database
         } else {
             self::eliminarBaseActual($user_uuid);
             #GENERANDO UN UUID UNICO PARA EL PERFIL
-            $uuidFactory = new UuidFactory();
             $uuid = $uuidFactory->uuid4();
             $client_uuid = $uuid->toString();
             $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
