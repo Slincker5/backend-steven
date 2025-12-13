@@ -15,7 +15,6 @@ class  ClienteController
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $body = $request->getParsedBody();
         $classClient = new Cliente($body["cliente"], $body["nombre"], $body["numero"], $body["fecha"]);
-        $classClient->eliminarBaseActual($user_uuid);
         $categoria = $classClient->cargarBase($user_uuid);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));

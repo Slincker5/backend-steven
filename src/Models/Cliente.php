@@ -29,6 +29,7 @@ class Cliente extends Database
             $this->response["message"] = "La fila numero no puede estar vacia.";
             return $this->response;
         } else {
+            self::eliminarBaseActual($user_uuid);
             #GENERANDO UN UUID UNICO PARA EL PERFIL
             $uuidFactory = new UuidFactory();
             $uuid = $uuidFactory->uuid4();
@@ -42,20 +43,18 @@ class Cliente extends Database
             }
         }
     }
-
-    public function eliminarBaseActual($user_uuid){
-         $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
-            $consulta = $this->ejecutarConsulta($sql, [$client_uuid, $this->cliente, $this->nombre, $this->numero, $this->fecha, $user_uuid]);
-            if ($consulta) {
-                $this->response["status"] = "ok";
-                $this->response["message"] = "Base cargada exitosamente.";
-                return $this->response;
-            }
+    
+    public function eliminarBaseActual($user_uuid)
+    {
+        $sql = 'DELETE FROM base WHERE user_uuid = ?';
+        $consulta = $this->ejecutarConsulta($sql, [$user_uuid]);
     }
 
     public function obtenerBase($user_uuid)
     {
-        $sql = 'DELETE FROM base WHERE user_uuid = ?';
-        $this->ejecutarConsulta($sql, [$user_uuid]);
+        $sql = 'SELECT * FROM base WHERE user_uuid = ? ORDER BY currentDate DESC';
+        $consulta = $this->ejecutarConsulta($sql, [$user_uuid]);
+        $list = $consulta->fetchAll(\PDO::FETCH_ASSOC);
+        return $list;
     }
 }
