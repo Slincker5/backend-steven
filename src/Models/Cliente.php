@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Ramsey\Uuid\UuidFactory;
+use Ramsey\Uuid\Uuid;
 use App\Models\Database;
 use Slim\Psr7\Response;
 
@@ -30,8 +31,8 @@ class Cliente extends Database
             return $this->response;
         } else {
             #GENERANDO UN UUID UNICO PARA EL PERFIL
-            $uuid = $uuidFactory->uuid4();
-            $client_uuid = $uuid->toString();
+            
+            $client_uuid = Uuid::uuid4()->toString();
             $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
             $consulta = $this->ejecutarConsulta($sql, [$client_uuid, $this->cliente, $this->nombre, $this->numero, $this->fecha, $user_uuid]);
             if ($consulta) {
