@@ -15,7 +15,7 @@ class Cliente extends Database
     protected $numero;
     protected $fecha;
 
-    public function __construct($cliente = '', $nombre = '', $numero ='', $fecha = '')
+    public function __construct($cliente = '', $nombre = '', $numero = '', $fecha = '')
     {
         $this->cliente = $cliente;
         $this->nombre = $nombre;
@@ -23,33 +23,49 @@ class Cliente extends Database
         $this->fecha = $fecha;
     }
 
-    public function cargarBase($user_uuid)
+    public function cargarBase(array $clientes, $user_uuid)
     {
-        if(count($this->obtenerBase($user_uuid)) > 0){
+        if (count($this->obtenerBase($user_uuid)) > 0) {
             $this->eliminarBaseActual($user_uuid);
         }
-        if (empty(trim($this->numero))) {
-            $this->response["status"] = "error";
-            $this->response["message"] = "La fila numero no puede estar vacia.";
-            return $this->response;
-        } else {
-            #GENERANDO UN UUID UNICO PARA EL PERFIL
-            
-            $client_uuid = Uuid::uuid4()->toString();
-            $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
-            $consulta = $this->ejecutarConsulta($sql, [$client_uuid, $this->cliente, $this->nombre, $this->numero, $this->fecha, $user_uuid]);
-            if ($consulta) {
-                $this->response["status"] = "ok";
-                $this->response["message"] = "Base cargada exitosamente.";
-                return $this->response;
+
+        foreach ($clientes as $cliente) {
+
+            $idCliente = $cliente["cliente"];
+            $nombreCliente = $cliente["nombre"];
+            $numeroCliente = $cliente["numero"];
+            $fechaVencCliente = $cliente["fecha"];
+            $omitidos = 0;
+            $clienteSinNumero = [];
+
+            $validarNumero = $this->normalizarNumeroSV($numeroCliente);
+
+            if ($validarNumero === null) {
+                $omitidos++;
+                $clienteSinNumero[] = [
+                    "cliente" => $$idCliente,
+                    "nombre" => $nombreCliente,
+                    "error" => "Numero invalido"
+                ];
+                continue;
             }
         }
+        #GENERANDO UN UUID UNICO PARA EL PERFIL
+
+        $client_uuid = Uuid::uuid4()->toString();
+        $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
+        $consulta = $this->ejecutarConsulta($sql, [$client_uuid, $idCliente, $nombreCliente, $numeroCliente, $fechaVencCliente, $user_uuid]);
+        if ($consulta) {
+            $this->response["status"] = "ok";
+            $this->response["message"] = "Base cargada exitosamente.";
+            return $this->response;
+        }
     }
-    
+
     public function eliminarBaseActual($user_uuid)
     {
         $sql = 'DELETE FROM base WHERE user_uuid = ?';
-        $consulta = $this->ejecutarConsulta($sql, [$user_uuid]);
+        $this->ejecutarConsulta($sql, [$user_uuid]);
     }
 
     public function obtenerBase($user_uuid)
@@ -58,5 +74,26 @@ class Cliente extends Database
         $consulta = $this->ejecutarConsulta($sql, [$user_uuid]);
         $list = $consulta->fetchAll(\PDO::FETCH_ASSOC);
         return $list;
+    }
+
+    public function normalizarNumeroSV($input): ?string
+    {
+        $s = trim((string)$input);
+        if ($s === '') return null;
+
+        // Solo dígitos
+        $digits = preg_replace('/\D+/', '', $s);
+
+        // Quita 503 si viene incluido
+        if (strlen($digits) === 11 && substr($digits, 0, 3) === '503') {
+            $digits = substr($digits, 3);
+        }
+
+        // Valida 8 dígitos
+        if (!preg_match('/^[2-9]\d{7}$/', $digits)) {
+            return null;
+        }
+
+        return '503' . $digits;
     }
 }
