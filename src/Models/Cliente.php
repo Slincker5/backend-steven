@@ -49,17 +49,14 @@ class Cliente extends Database
                 ];
                 continue;
             }
+            $client_uuid = Uuid::uuid4()->toString();
+            $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
+            $consulta = $this->ejecutarConsulta($sql, [$client_uuid, $idCliente, $nombreCliente, $numeroCliente, $fechaVencCliente, $user_uuid]);
         }
-        #GENERANDO UN UUID UNICO PARA EL PERFIL
 
-        $client_uuid = Uuid::uuid4()->toString();
-        $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
-        $consulta = $this->ejecutarConsulta($sql, [$client_uuid, $idCliente, $nombreCliente, $numeroCliente, $fechaVencCliente, $user_uuid]);
-        if ($consulta) {
-            $this->response["status"] = "ok";
-            $this->response["message"] = "Base cargada exitosamente.";
-            return $this->response;
-        }
+        $this->response["status"] = "ok";
+        $this->response["message"] = "Base cargada exitosamente.";
+        return $this->response;
     }
 
     public function eliminarBaseActual($user_uuid)
