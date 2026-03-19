@@ -6,7 +6,6 @@ use App\Controllers\AuthController;
 use App\Controllers\AdminController;
 use App\Controllers\AmazonS3Controller;
 use App\Controllers\UserController;
-use App\Controllers\WhatsappController;
 use App\Controllers\CategoriaController;
 use App\Controllers\ClienteController;
 use App\Controllers\MensajeController;
@@ -39,10 +38,8 @@ $validateJwtMiddleware = function ($request, $handler) {
         return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
     }
 
-    #EXTRAER TOKEN DE LA CABEZERA
     list($jwt) = sscanf($authHeader, 'Bearer %s');
 
-    #VALIDAR SI LA CABEZERA CONTIENE ALGUN TOKEN
     if (!$jwt) {
         $response->getBody()->write(json_encode(["error" => "Token no encontrado en la cabecera Authorization"]));
         return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
@@ -50,16 +47,11 @@ $validateJwtMiddleware = function ($request, $handler) {
 
     try {
         $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
-        // Aquí puedes incluso agregar el payload decodificado al request si lo necesitas después
         $request = $request->withAttribute('payload', $decoded);
         $request = $request->withAttribute('jwt', $jwt);
     } catch (Exception $e) {
         $response = new Response();
-        $paquete = [
-            "status" => "invalid",
-            "message" => "Token no valido."
-        ];
-        $response->getBody()->write(json_encode($paquete));
+        $response->getBody()->write(json_encode(["status" => "invalid", "message" => "Token no valido."]));
         return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
     }
 
@@ -87,17 +79,16 @@ $app->group('/user', function ($group) {
 })->add($validateJwtMiddleware);
 
 $app->group('/admin', function ($group) {
+    $group->get('/users', AdminController::class . ':listarUsuarios');
     $group->post('/approve-user', AdminController::class . ':verifyUser');
+    $group->put('/user/edit', AdminController::class . ':editarUsuario');
+    $group->delete('/user/delete', AdminController::class . ':eliminarUsuario');
+    $group->post('/user/block', AdminController::class . ':bloquearUsuario');
+    $group->post('/user/reset-password', AdminController::class . ':restablecerPassword');
+    $group->get('/whatsapp/sessions', AdminController::class . ':sesionesWhatsapp');
+    $group->post('/whatsapp/cancel-batch', AdminController::class . ':cancelarEnvio');
+    $group->post('/whatsapp/close-session', AdminController::class . ':cerrarSesionWhatsapp');
 })->add($validateJwtMiddleware);
-
-$app->group('/whatsapp', function ($group) {
-    $group->get('/get-qr', WhatsappController::class . ':obtenerQr');
-    $group->get('/logout', WhatsappController::class . ':cerrarSesion');
-    $group->get('/log-status', WhatsappController::class . ':logueado');
-    $group->get('/profile', WhatsappController::class . ':obtenerInfoWhatsapp');
-})->add($validateJwtMiddleware);
-
-// rutas categoria mensajes
 
 $app->group('/category', function ($group) {
     $group->post('/new', CategoriaController::class . ':crearCategoria');
