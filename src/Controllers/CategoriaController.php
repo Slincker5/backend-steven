@@ -24,8 +24,9 @@ class   CategoriaController
     function obtenerCategorias($request, $response, $args)
     {
         $rol = $request->getAttribute('payload')->data->rol;
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $classAuth = new Categoria();
-        $categoria = $classAuth->obtenerCategorias($rol);
+        $categoria = $classAuth->obtenerCategorias($rol, $user_uuid);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
         return $response;

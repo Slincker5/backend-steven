@@ -65,13 +65,13 @@ class Categoria extends Database
         }
     }
 
-    public function obtenerCategorias($rol)
+    public function obtenerCategorias($rol, $user_uuid)
     {
         if ($rol !== 'Admin' && $rol !== 'Editor') {
             return "No estas autorizado para esta accion";
         }
-        $sql = 'SELECT uuid, titulo, user_uuid, fecha FROM categoria_mensaje ORDER BY fecha DESC';
-        $consulta = $this->ejecutarConsulta($sql);
+        $sql = 'SELECT uuid, titulo, user_uuid, fecha FROM categoria_mensaje WHERE user_uuid = ? ORDER BY fecha DESC';
+        $consulta = $this->ejecutarConsulta($sql, [$user_uuid]);
         $list = $consulta->fetchAll(\PDO::FETCH_ASSOC);
         return $list;
     }
