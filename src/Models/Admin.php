@@ -7,11 +7,13 @@ use App\Models\Database;
 class Admin extends Database
 {
     private $user_uuid;
+    private $jwt;
     private $autowat_url = 'http://localhost:3300';
 
-    public function __construct($user_uuid)
+    public function __construct($user_uuid, $jwt = null)
     {
         $this->user_uuid = $user_uuid;
+        $this->jwt = $jwt;
     }
 
     private function getRol()
@@ -138,8 +140,16 @@ class Admin extends Database
 
     private function proxyGet($path)
     {
+        $headers = ['Content-Type: application/json'];
+        if ($this->jwt) {
+            $headers[] = 'Authorization: Bearer ' . $this->jwt;
+        }
         $ch = curl_init($this->autowat_url . $path);
-        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 10]);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_HTTPHEADER => $headers,
+        ]);
         $response = curl_exec($ch);
         curl_close($ch);
         return json_decode($response, true) ?? ['error' => 'Sin respuesta de autowat-api'];
@@ -147,12 +157,16 @@ class Admin extends Database
 
     private function proxyPost($path, $data = [])
     {
+        $headers = ['Content-Type: application/json'];
+        if ($this->jwt) {
+            $headers[] = 'Authorization: Bearer ' . $this->jwt;
+        }
         $ch = curl_init($this->autowat_url . $path);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => json_encode($data),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_HTTPHEADER => $headers,
             CURLOPT_TIMEOUT => 10,
         ]);
         $response = curl_exec($ch);

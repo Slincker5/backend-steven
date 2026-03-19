@@ -9,7 +9,8 @@ class AdminController
     private function getAdmin($request)
     {
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
-        return new Admin($user_uuid);
+        $jwt = $request->getAttribute('jwt');
+        return new Admin($user_uuid, $jwt);
     }
 
     private function jsonResponse($response, $data)
