@@ -69,7 +69,7 @@ class Config
     // AutoWhat API
     public static function autowhatUrl(): string
     {
-        return self::env('AUTOWHAT_URL', 'https://whatsapp.autowat.site');
+        return self::env('AUTOWHAT_URL', 'https://auto.autowat.site');
     }
 
     // Amazon S3 CDN
