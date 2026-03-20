@@ -47,4 +47,80 @@ class  ClienteController
         return $response;
     }
 
+    function actualizarCliente($request, $response, $args)
+    {
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
+        $body = $request->getParsedBody();
+
+        $uuid = $body['uuid'] ?? '';
+        $cliente = $body['cliente'] ?? '';
+        $nombre = $body['nombre'] ?? '';
+        $numero = $body['numero'] ?? '';
+        $fecha = $body['fecha'] ?? '';
+
+        if (empty($uuid) || empty($numero)) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "Los campos uuid y numero son obligatorios"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
+        $classCliente = new Cliente();
+        $numeroNormalizado = $classCliente->normalizarNumeroSV($numero);
+
+        if ($numeroNormalizado === null) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "Numero invalido"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
+        $resultado = $classCliente->actualizarCliente($uuid, $cliente, $nombre, $numeroNormalizado, $fecha, $user_uuid);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($resultado));
+        return $response;
+    }
+
+    function eliminarCliente($request, $response, $args)
+    {
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
+        $uuid = $args['uuid'] ?? '';
+
+        if (empty($uuid)) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "El uuid del cliente es obligatorio"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
+        $classCliente = new Cliente();
+        $resultado = $classCliente->eliminarCliente($uuid, $user_uuid);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($resultado));
+        return $response;
+    }
+
+    function agregarCliente($request, $response, $args)
+    {
+        $user_uuid = $request->getAttribute('payload')->data->user_uuid;
+        $body = $request->getParsedBody();
+
+        $cliente = $body['cliente'] ?? '';
+        $nombre = $body['nombre'] ?? '';
+        $numero = $body['numero'] ?? '';
+        $fecha = $body['fecha'] ?? '';
+
+        if (empty($numero)) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "El campo numero es obligatorio"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
+        $classCliente = new Cliente();
+        $numeroNormalizado = $classCliente->normalizarNumeroSV($numero);
+
+        if ($numeroNormalizado === null) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "Numero invalido"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
+        $resultado = $classCliente->agregarCliente($cliente, $nombre, $numeroNormalizado, $fecha, $user_uuid);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($resultado));
+        return $response;
+    }
+
 }

@@ -105,6 +105,9 @@ $app->group('/base', function ($group) {
     $group->post('/create', ClienteController::class . ':cargarBase');
     $group->get('/list', ClienteController::class . ':obtenerBase');
     $group->delete('/delete', ClienteController::class . ':eliminarBase');
+    $group->put('/update', ClienteController::class . ':actualizarCliente');
+    $group->delete('/delete/{uuid}', ClienteController::class . ':eliminarCliente');
+    $group->post('/add', ClienteController::class . ':agregarCliente');
 })->add($validateJwtMiddleware);
 
 $app->group('/files', function ($group) {

@@ -78,6 +78,34 @@ class Cliente extends Database
         return $list;
     }
 
+    public function actualizarCliente($uuid, $cliente, $nombre, $numero, $fecha, $user_uuid)
+    {
+        $sql = 'UPDATE base SET cliente = ?, nombre = ?, numero = ?, fecha = ? WHERE uuid = ? AND user_uuid = ?';
+        $consulta = $this->ejecutarConsulta($sql, [$cliente, $nombre, $numero, $fecha, $uuid, $user_uuid]);
+        if ($consulta->rowCount() > 0) {
+            return ["status" => "ok", "message" => "Cliente actualizado exitosamente."];
+        }
+        return ["status" => "error", "message" => "No se encontró el cliente o no pertenece al usuario."];
+    }
+
+    public function eliminarCliente($uuid, $user_uuid)
+    {
+        $sql = 'DELETE FROM base WHERE uuid = ? AND user_uuid = ?';
+        $consulta = $this->ejecutarConsulta($sql, [$uuid, $user_uuid]);
+        if ($consulta->rowCount() > 0) {
+            return ["status" => "ok", "message" => "Cliente eliminado exitosamente."];
+        }
+        return ["status" => "error", "message" => "No se encontró el cliente o no pertenece al usuario."];
+    }
+
+    public function agregarCliente($cliente, $nombre, $numero, $fecha, $user_uuid)
+    {
+        $client_uuid = Uuid::uuid4()->toString();
+        $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
+        $this->ejecutarConsulta($sql, [$client_uuid, $cliente, $nombre, $numero, $fecha, $user_uuid]);
+        return ["status" => "ok", "message" => "Cliente agregado exitosamente.", "uuid" => $client_uuid];
+    }
+
     public function normalizarNumeroSV($input): ?string
     {
         $s = trim((string)$input);
