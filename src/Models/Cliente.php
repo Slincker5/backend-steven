@@ -23,11 +23,15 @@ class Cliente extends Database
         $this->fecha = $fecha;
     }
 
-    public function cargarBase(array $clientes, $user_uuid)
+    public function cargarBase(array $body, $user_uuid)
     {
         if (count($this->obtenerBase($user_uuid)) > 0) {
             $this->eliminarBaseActual($user_uuid);
         }
+
+        $clientes = $body['base'];
+        $omitidos = 0;
+        $clienteSinNumero = [];
 
         foreach ($clientes as $cliente) {
 
@@ -35,15 +39,13 @@ class Cliente extends Database
             $nombreCliente = $cliente["nombre"];
             $numeroCliente = $cliente["numero"];
             $fechaVencCliente = $cliente["fecha"];
-            $omitidos = 0;
-            $clienteSinNumero = [];
 
             $validarNumero = $this->normalizarNumeroSV($numeroCliente);
 
             if ($validarNumero === null) {
                 $omitidos++;
                 $clienteSinNumero[] = [
-                    "cliente" => $$idCliente,
+                    "cliente" => $idCliente,
                     "nombre" => $nombreCliente,
                     "error" => "Numero invalido"
                 ];
@@ -51,11 +53,13 @@ class Cliente extends Database
             }
             $client_uuid = Uuid::uuid4()->toString();
             $sql = 'INSERT INTO base (uuid, cliente, nombre, numero, fecha, user_uuid) VALUES (?, ?, ?, ?, ?, ?)';
-            $consulta = $this->ejecutarConsulta($sql, [$client_uuid, $idCliente, $nombreCliente, $numeroCliente, $fechaVencCliente, $user_uuid]);
+            $consulta = $this->ejecutarConsulta($sql, [$client_uuid, $idCliente, $nombreCliente, $validarNumero, $fechaVencCliente, $user_uuid]);
         }
 
         $this->response["status"] = "ok";
         $this->response["message"] = "Base cargada exitosamente.";
+        $this->response["omitidos"] = $omitidos;
+        $this->response["clientesSinNumero"] = $clienteSinNumero;
         return $this->response;
     }
 
@@ -63,6 +67,7 @@ class Cliente extends Database
     {
         $sql = 'DELETE FROM base WHERE user_uuid = ?';
         $this->ejecutarConsulta($sql, [$user_uuid]);
+        return ["status" => "ok", "message" => "Base eliminada exitosamente."];
     }
 
     public function obtenerBase($user_uuid)
