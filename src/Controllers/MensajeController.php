@@ -14,8 +14,16 @@ class  MensajeController
         $rol = $request->getAttribute('payload')->data->rol;
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $body = $request->getParsedBody();
-        $classAuth = new Mensaje($body['mensaje']);
-        $categoria = $classAuth->crearMensaje($rol, $user_uuid, $body['categoria']);
+        if (empty($body['mensaje'])) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "El campo mensaje es requerido"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        if (empty($body['categoria'])) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "El campo categoria es requerido"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        $classMensaje = new Mensaje($body['mensaje']);
+        $categoria = $classMensaje->crearMensaje($rol, $user_uuid, $body['categoria']);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
         return $response;
@@ -25,8 +33,8 @@ class  MensajeController
     {
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $body = $request->getParsedBody();
-        $classAuth = new Mensaje();
-        $categoria = $classAuth->obtenerPlantilla($user_uuid, $body["categoria"]);
+        $classMensaje = new Mensaje();
+        $categoria = $classMensaje->obtenerPlantilla($user_uuid, $body["categoria"]);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
         return $response;

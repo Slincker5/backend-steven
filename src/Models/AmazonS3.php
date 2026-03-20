@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Config;
 use Dotenv\Dotenv;
 use Aws\S3\S3Client;
 
@@ -10,10 +11,12 @@ class AmazonS3
     private $s3Client;
     private $bucket;
     private $region;
-    private $cdnDomain = "https://cdn.multimarcas.app";
+    private $cdnDomain;
 
     public function __construct()
     {
+        $this->cdnDomain = Config::s3CdnUrl();
+
         try {
             $dotenv = Dotenv::createImmutable('/var/www/');
             $dotenv->load();

@@ -36,7 +36,7 @@ class Mensaje extends Database
     public function crearMensaje($rol, $user_uuid, $categoria_uuid)
     {
         if ($rol !== 'Admin' && $rol !== 'Editor') {
-            return "No estas autorizado para esta accion 1";
+            return ["status" => false, "message" => "No estás autorizado"];
         }
         if (self::validarmensaje($this->mensaje)) {
             $response['status'] = 'error';

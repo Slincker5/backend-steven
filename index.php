@@ -9,6 +9,7 @@ use App\Controllers\UserController;
 use App\Controllers\CategoriaController;
 use App\Controllers\ClienteController;
 use App\Controllers\MensajeController;
+use App\Config;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Slim\Psr7\Response;
@@ -24,14 +25,14 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Origin', Config::corsOrigin())
         ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 });
 
 $validateJwtMiddleware = function ($request, $handler) {
     $response = new Response();
-    $key = "PlankThuthu";
+    $key = Config::jwtKey();
     $authHeader = $request->getHeaderLine('Authorization');
     if (!$authHeader) {
         $response->getBody()->write(json_encode(["error" => "Token no proporcionado"]));

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Config;
 use App\Models\Database;
 use Firebase\JWT\JWT;
 use Ramsey\Uuid\UuidFactory;
@@ -12,7 +13,7 @@ class Auth extends Database
     #PROPIEDADES CLASE
     private $nombres = '/^[0-9]+$/';
     private $response;
-    private $key = "PlankThuthu";
+
 
     private function verifyAccount($username)
     {
@@ -81,7 +82,7 @@ class Auth extends Database
                     ),
                 );
                 $alg = "HS256";
-                $token = JWT::encode($payload, $this->key, $alg);
+                $token = JWT::encode($payload, Config::jwtKey(), $alg);
                 $this->response['status'] = 'OK';
                 $this->response['message'] = 'Registro exitoso.';
                 $this->response['username'] = $username;
@@ -119,7 +120,7 @@ class Auth extends Database
                     ),
                 );
                 $alg = "HS256";
-                $token = JWT::encode($payload, $this->key, $alg);
+                $token = JWT::encode($payload, Config::jwtKey(), $alg);
 
                 $this->response['status'] = 'OK';
                 $this->response['message'] = 'Sesión exitosa.';

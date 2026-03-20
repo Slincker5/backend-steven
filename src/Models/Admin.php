@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use App\Config;
 use App\Models\Database;
 
 class Admin extends Database
 {
     private $user_uuid;
     private $jwt;
-    private $autowat_url = 'http://localhost:3300';
+    private $autowat_url;
 
     public function __construct($user_uuid, $jwt = null)
     {
         $this->user_uuid = $user_uuid;
         $this->jwt = $jwt;
+        $this->autowat_url = Config::autowhatUrl();
     }
 
     private function getRol()

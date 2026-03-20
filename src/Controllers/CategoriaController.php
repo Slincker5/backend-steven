@@ -14,8 +14,12 @@ class   CategoriaController
         $rol = $request->getAttribute('payload')->data->rol;
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $body = $request->getParsedBody();
-        $classAuth = new Categoria($body['titulo']);
-        $categoria = $classAuth->crearCategoria($rol, $user_uuid);
+        if (empty($body['titulo'])) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "El campo titulo es requerido"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        $classCategoria = new Categoria($body['titulo']);
+        $categoria = $classCategoria->crearCategoria($rol, $user_uuid);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
         return $response;
@@ -25,8 +29,8 @@ class   CategoriaController
     {
         $rol = $request->getAttribute('payload')->data->rol;
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
-        $classAuth = new Categoria();
-        $categoria = $classAuth->obtenerCategorias($rol, $user_uuid);
+        $classCategoria = new Categoria();
+        $categoria = $classCategoria->obtenerCategorias($rol, $user_uuid);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
         return $response;

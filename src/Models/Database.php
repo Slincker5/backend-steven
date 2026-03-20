@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
+use App\Config;
+
 class Database
 {
-    private static $parametros = "mysql:host=localhost;dbname=steven;charset=utf8mb4";
-    private static $usuario = "root";
-    private static $clave = "";
-
     public function conectar()
     {
         try {
-            $con = new \PDO(self::$parametros, self::$usuario, self::$clave, [
+            $dsn = "mysql:host=" . Config::dbHost() . ";dbname=" . Config::dbName() . ";charset=utf8mb4";
+            $con = new \PDO($dsn, Config::dbUser(), Config::dbPass(), [
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
             ]);
             return $con;

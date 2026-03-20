@@ -14,6 +14,10 @@ class  ClienteController
         $rol = $request->getAttribute('payload')->data->rol;
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
         $body = $request->getParsedBody();
+        if (!isset($body['base']) || !is_array($body['base']) || empty($body['base'])) {
+            $response->getBody()->write(json_encode(["status" => false, "message" => "El campo base debe ser un array no vacío"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
         $classClient = new Cliente($body["cliente"], $body["nombre"], $body["numero"], $body["fecha"]);
         $categoria = $classClient->cargarBase($body, $user_uuid);
         $response = $response->withHeader('Content-Type', 'application/json');
@@ -25,8 +29,8 @@ class  ClienteController
     {
         $rol = $request->getAttribute('payload')->data->rol;
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
-        $classAuth = new Cliente();
-        $categoria = $classAuth->eliminarBaseActual($user_uuid);
+        $classCliente = new Cliente();
+        $categoria = $classCliente->eliminarBaseActual($user_uuid);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
         return $response;
@@ -36,8 +40,8 @@ class  ClienteController
     {
         $rol = $request->getAttribute('payload')->data->rol;
         $user_uuid = $request->getAttribute('payload')->data->user_uuid;
-        $classAuth = new Cliente();
-        $categoria = $classAuth->obtenerBase($user_uuid);
+        $classCliente = new Cliente();
+        $categoria = $classCliente->obtenerBase($user_uuid);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
         return $response;
