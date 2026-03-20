@@ -18,7 +18,7 @@ class  ClienteController
             $response->getBody()->write(json_encode(["status" => false, "message" => "El campo base debe ser un array no vacío"]));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
-        $classClient = new Cliente($body["cliente"], $body["nombre"], $body["numero"], $body["fecha"]);
+        $classClient = new Cliente();
         $categoria = $classClient->cargarBase($body, $user_uuid);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($categoria));
